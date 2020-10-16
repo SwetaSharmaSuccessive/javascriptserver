@@ -31,6 +31,9 @@ const f = (rows)=>{
     }
             
     }
+    else{
+        console.log("error: Something went wrong");
+    }
 }
  let y=process.argv[2];
      f(y);  
