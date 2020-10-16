@@ -1,5 +1,5 @@
 
-const f = (rows)=>{ 
+const DiamondPattern = (rows)=>{ 
     
     if((rows>=2) &&( rows<= 10)){
 
@@ -36,5 +36,5 @@ const f = (rows)=>{
     }
 }
  let y=process.argv[2];
-     f(y);  
+     DiamondPattern(y);  
     
