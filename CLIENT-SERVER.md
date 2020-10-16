@@ -37,9 +37,19 @@ GET: GET is used to request data from a specified resource.
 	 GET requests are only used to request data (not modify).
 	 
 POST: POST is used to send data to a server to create/update a resource.
-	  POST requests are never cached
-      POST requests do not remain in the browser history
-      POST requests cannot be bookmarked
-      POST requests have no restrictions on data length
+	  POST requests are never cached.
+      POST requests do not remain in the browser history.
+      POST requests cannot be bookmarked.
+      POST requests have no restrictions on data length.
+	
+PUT: PUT is used to send data to a server to create/update a resource.
+	 The difference between POST and PUT is that PUT requests are idempotent. That is, calling the same PUT request multiple times will always produce the same      	  result. In contrast, calling a POST request repeatedly have side effects of creating the same resource multiple times.
+	 
+HEAD: HEAD is almost identical to GET, but without the response body.
+	  if GET /users returns a list of users, then HEAD /users will make the same request but will not return the list of users.
+	  HEAD requests are useful for checking what a GET request will return before actually making a GET request - like before downloading a large file or response 		 body.
+	  
+DELETE : The DELETE method deletes the specified resource.
 
+OPTIONS: The OPTIONS method describes the communication options for the target resource.
 	
