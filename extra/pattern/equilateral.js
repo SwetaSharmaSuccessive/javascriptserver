@@ -1,4 +1,4 @@
-function Equilateral(NoOfrow){
+let A=(NoOfrow)=>{
     for(let i=1;i<=NoOfrow;i++){
         for(let x=NoOfrow-1;x>=i;x--){
             process.stdout.write(" ");
@@ -11,4 +11,4 @@ function Equilateral(NoOfrow){
     }
 }
 let y=process.argv[2];
-Equilateral(y)
+A(y)
