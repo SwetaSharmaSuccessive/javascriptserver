@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 function printDiamond(n){
     let str;
     for(let i=1; i<=n; i++){
@@ -33,3 +34,45 @@ function printDiamond(n){
     
     n = process.argv[2];
     printDiamond(n);
+=======
+
+const DiamondPattern = (rows)=>{ 
+    
+    if((rows>=2) &&( rows<= 10)){
+
+
+        for(let i=1;i<=rows;i++){
+            let sp="";
+            for(let j=rows;j>=i;j--){
+                sp=sp+" ";
+            }
+                
+        for(let k=1;k<=i;k++){
+            sp=sp+"* ";
+        }
+        console.log(sp); 
+        }
+            
+    for(let i=rows;i>=1;i--){
+        let sp="";
+        for(let j=rows;j>=i;j--){
+            sp=sp+" ";
+                    
+        }
+        for(let k=i;k>=1;k--){
+            sp=sp+"* ";
+        }
+            
+        console.log(sp); 
+        
+    }
+            
+    }
+    else{
+        console.log("error: Something went wrong");
+    }
+}
+ let y=process.argv[2];
+     DiamondPattern(y);  
+    
+>>>>>>> f27a42bdbe808e67e3bbff9725fa607b4fc0f26c
