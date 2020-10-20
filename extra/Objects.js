@@ -41,17 +41,5 @@ Cust.name="XAE-72";
 Cust.isHuman=false;
 Cust.Customer_Details();
 
-// object.defineProperties()                didn't get this method
 
-//let laptop1={};
-//Object.defineProperties(laptop,{  
-  //  prop1:{ 
-    //configurable: true,
-    //enumerable: false,
-    //writable: true,               
-    //value: undefined,
-    //},
-    //prop2:{}
-//});
-//console.log(laptop1.prop1);
 
