@@ -61,7 +61,8 @@ console.log('reversed:', reversed);
 
 // Array.copyWithin()
 
-console.log(fast_food.copyWithin(0, 1, 2));
+console.log('Array.copyWihin()-->', fast_food.copyWithin(0, 1, 2));
+
 
 
 
