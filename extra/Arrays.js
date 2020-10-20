@@ -28,7 +28,7 @@ console.log(newLength1)
 let Copy = fast_food.slice()                   // Copy an Array
 console.log(Copy);
 
-let pos = fast_food.indexOf('maggie')       //doubt
+let pos = fast_food.indexOf('maggie')       
 console.log(pos)
 let removedItem = fast_food.splice(pos, 1)
 console.log(fast_food)
@@ -45,7 +45,7 @@ console.log(x);
 //ArrayOf
 
 let veg_food=Array.of('panner', 'chhole_bhtaure', 'pav_bhaji');
-console.log(`veg food --> ${veg_food}`);                        // doubt
+console.log(`veg food --> ${veg_food}`);                       
 console.log(veg_food)
 
 //Array.concat()
@@ -63,6 +63,6 @@ console.log('reversed:', reversed);
 
 console.log(fast_food.copyWithin(0, 1, 2));
 
-//Array.reverse()
+
 
 
