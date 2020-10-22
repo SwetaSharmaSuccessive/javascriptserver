@@ -15,7 +15,7 @@ const permissions = {
     }
     }
     
-    const hasPermissions = (moduleName, role, permissionType) => {
+    export default hasPermissions = (moduleName, role, permissionType) => {
     try{
     if (permissions[moduleName].all.includes(role) || permissions[moduleName][permissionType].includes(role)){
     console.log(`${role} has ${permissionType} permissions`)
@@ -30,8 +30,8 @@ const permissions = {
     }
     
     }
-    hasPermissions("getUsers2","HR dept", "read")
-    hasPermissions("getUsers2", "CEO", "all")
-    hasPermissions("getAccess", "IT dept", "write")
-    hasPermissions("getUsers", "head-trainer", "write")
-    hasPermissions("getUsers", "trainee", "all")
+    // hasPermissions("getUsers2","HR dept", "read")
+    // hasPermissions("getUsers2", "CEO", "all")
+    // hasPermissions("getAccess", "IT dept", "write")
+    // hasPermissions("getUsers", "head-trainer", "write")
+    // hasPermissions("getUsers", "trainee", "all")

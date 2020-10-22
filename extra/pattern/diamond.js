@@ -38,3 +38,4 @@ const DiamondPattern = (rows)=>{
  let y=process.argv[2];
      DiamondPattern(y);  
     
+export default DiamondPattern;     

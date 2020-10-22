@@ -18,3 +18,5 @@ else{
 }
 let y=process.argv[2];
 EquilateralTriangle(y)
+
+export default EquilateralTriangle;

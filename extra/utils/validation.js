@@ -17,14 +17,14 @@ const users = [
     
     ];
     
+   import {validateEmail} from './helpers' 
+// const validateEmail = (email) => {
+//     const regex = /\w+[.]\w+@successive.tech$/i;
+//     return regex.test(email)
+// }
     
-const validateEmail = (email) => {
-    const regex = /\w+[.]\w+@successive.tech$/i;
-    return regex.test(email)
-}
     
-    
-const validateUsers = (user) =>{
+export default validateUsers = (user) =>{
     const validUsers = [];
     const invalidUsers = [];
     user.forEach(({traineeEmail, reviewerEmail}) => {
