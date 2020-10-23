@@ -14,7 +14,7 @@ export const permissions = {
     }
 }
 
-export let users = [
+export const users = [
     {
     traineeEmail: 'trainee.S@successive.tech',
     reviewerEmail: 'avinash.thube@successive.tech'
@@ -30,4 +30,4 @@ export let users = [
     reviewerEmail: 'reviewer3.D@successive.tech'
     }
     
-    ];
+];
