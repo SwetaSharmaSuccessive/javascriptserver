@@ -1,8 +1,10 @@
-import  {diamond, equilateral} from './pattern';
-import { Permissions,validation} from './utils'
+import  {DiamondPattern, EquilateralTriangle} from './pattern';
+import { hasPermissions,validateUsers} from './utils';
+import {Permissions, users} from './constant';
 
-diamond()
-equilateral()
-console.log(Permissions("getUsers2","HR dept", "read"));
-//hasPermissions("getUsers2","HR dept", "read");
-validation()
+console.log('print a diamond pattern with rows 5');
+DiamondPattern(5);
+console.log("print a equilateral triangle with rows 5");
+EquilateralTriangle(5);
+hasPermissions("getUsers2","HR dept", "read");
+validateUsers(users);

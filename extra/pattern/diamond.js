@@ -1,8 +1,8 @@
 
 const DiamondPattern = (rows)=>{ 
-    
+     
     if((rows>=2) &&( rows<= 10)){
-
+        
 
         for(let i=1;i<=rows;i++){
             let sp="";
@@ -10,13 +10,13 @@ const DiamondPattern = (rows)=>{
                 sp=sp+" ";
             }
                 
-        for(let k=1;k<=i;k++){
-            sp=sp+"* ";
+            for(let k=1;k<=i;k++){
+                sp=sp+"* ";
         }
         console.log(sp); 
         }
             
-    for(let i=rows;i>=1;i--){
+        for(let i=rows;i>=1;i--){
         let sp="";
         for(let j=rows;j>=i;j--){
             sp=sp+" ";
@@ -30,12 +30,13 @@ const DiamondPattern = (rows)=>{
         
     }
             
-    }
+}
     else{
         console.log("error: Something went wrong");
     }
 }
- let y=process.argv[2];
-     DiamondPattern(y);  
+ //export let y=process.argv[2];
+     //DiamondPattern(y);  
     
-export default DiamondPattern;     
+  
+     export default DiamondPattern;

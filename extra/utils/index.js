@@ -1,7 +1,8 @@
-import Permissions from './permissions';
+import hasPermissions from './permissions';
+import validateUsers from './validation';
 
 
 export{
-    Permissions
-    
+    hasPermissions,
+    validateUsers
 }

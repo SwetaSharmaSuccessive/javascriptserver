@@ -1,7 +1,8 @@
-import diamond from './diamond';
-import equilateral from './equilateral';
+import DiamondPattern from './diamond';
+import EquilateralTriangle from './equilateral';
+
 
 export{
-    diamond,
-    equilateral
-}
+    DiamondPattern,
+    EquilateralTriangle
+};
