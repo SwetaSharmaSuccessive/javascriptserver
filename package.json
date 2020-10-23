@@ -1,0 +1,25 @@
+{
+  "name": "javascriptserver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "extra": "babel-node extra"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SwetaSharmaSuccessive/javascriptserver.git"
+  },
+  "author": "sweta sharma",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SwetaSharmaSuccessive/javascriptserver/issues"
+  },
+  "homepage": "https://github.com/SwetaSharmaSuccessive/javascriptserver#readme",
+  "dependencies": {
+    "@babel/core": "^7.12.3",
+    "@babel/node": "^7.12.1",
+    "@babel/preset-env": "^7.12.1"
+  }
+}
