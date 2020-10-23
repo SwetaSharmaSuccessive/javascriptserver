@@ -1,4 +1,4 @@
- const EquilateralTriangle = (NoOfrow)=>{
+ export default (NoOfrow)=>{
     
     if((NoOfrow>=2) &&(NoOfrow<= 10)){ 
         for(let i=1;i<=NoOfrow;i++){
@@ -17,6 +17,6 @@
     }
 }
 
-export default EquilateralTriangle;
+
 
 

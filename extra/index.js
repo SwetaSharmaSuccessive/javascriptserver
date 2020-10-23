@@ -1,6 +1,6 @@
 import  {DiamondPattern, EquilateralTriangle} from './pattern';
 import { hasPermissions,validateUsers} from './utils';
-import {Permissions, users} from './constant';
+import { users} from './constant';
 
 console.log('print a diamond pattern with rows 5');
 DiamondPattern(5);
