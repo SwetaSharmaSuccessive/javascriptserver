@@ -1,4 +1,4 @@
-const DiamondPattern = (rows)=>{ 
+ const  DiamondPattern = (rows)=>{ 
      
     if((rows>=2) &&( rows<= 10)){
         for(let i=1;i<=rows;i++){
