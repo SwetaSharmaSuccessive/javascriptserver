@@ -1,17 +1,17 @@
-interface IUsers{
+interface IUsers {
 
     traineeEmail: string;
-    reviewerEmail : string;
+    reviewerEmail: string;
 }
 
-type access={
-    all : string[];
-    read : string[];
-    write : string [];
-    delete : string[];
-}
-
-interface IPermissions{
-    getUsers : access;
-    getUsers2 : access;
+type Users2= {
+    all: string[];
+    read: string[];
+    write: string [];
+    delete: string[];
 };
+
+interface IPermissions {
+    getUsers: Users2;
+    getUsers2: Users2;
+}
