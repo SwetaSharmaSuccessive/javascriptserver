@@ -1,8 +1,7 @@
 import * as express from 'express';
 class Server {
-    
-    app
-    constructor(private config) {
+    private app: express.Express;
+    constructor(private config: any) {
         this.app = express();
     }
     bootstrap() {
@@ -10,21 +9,15 @@ class Server {
         return this;
     }
     SetupRoutes() {
-        const {app} = this;
-        app.get('/health-check', (req, res, next) => {
+        this.app.get('/health-check', (req, res, next) => {
             res.send('I am Ok');
         });
         return this;
     }
-    run() {
-        const {app, config: {PORT}} = this;
-        app.listen(PORT, (err) => {
-            if (err) {
-                console.log(err);
-            }
-            console.log(`App is running on port ${PORT}`);
 
-        })
+    run() {
+        this.app.listen(this.config.PORT, () => console.log(`Server is up and running on port ${this.config.PORT}`));
+        return this;
     }
 }
 export default Server;
