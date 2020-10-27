@@ -1,7 +1,8 @@
 import * as express from 'express';
+import { IConfig } from './config/IConfig';
 class Server {
-    private app: express.Express;
-    constructor(private config: any) {
+    private app: any;
+    constructor(private config: IConfig) {
         this.app = express();
     }
     bootstrap() {
@@ -16,7 +17,13 @@ class Server {
     }
 
     run() {
-        this.app.listen(this.config.PORT, () => console.log(`Server is up and running on port ${this.config.PORT}`));
+        const { PORT } = this.config;
+        this.app.listen(PORT, (err) => {
+            if (err) {
+                console.log('error:', err);
+            }
+            console.log(`Server is up and running on port ${PORT}`);
+        });
         return this;
     }
 }
