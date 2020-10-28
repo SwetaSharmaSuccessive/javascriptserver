@@ -10,20 +10,20 @@ class Server {
     bootstrap() {
         this.SetupRoutes();
         this.initBodyParser();
-        return this;
+        return this.app;
     }
     SetupRoutes() {
-
-        this.app.use('/health-check', (req, res, next) => {
-            console.log('inside second middleware');
+        const { app } = this;
+        app.use('/health-check', (req, res, next) => {
             res.send('I am Ok');
         });
-        this.app.use(notFoundHandler);
+        app.use(notFoundHandler);
 
-        this.app.use(errorHandler);
+        app.use(errorHandler);
     }
     public initBodyParser() {
-        this.app.use(bodyparser.json({ type: 'application/*+json' }));
+        const { app } = this;
+        app.use(bodyparser.urlencoded({ extended: false }));
     }
 
     run() {
