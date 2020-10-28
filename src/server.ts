@@ -1,5 +1,7 @@
 import * as express from 'express';
 import { IConfig } from './config/IConfig';
+import * as bodyparser from 'body-parser';
+import { notFoundHandler, errorHandler } from './libs/routes';
 class Server {
     private app: any;
     constructor(private config: IConfig) {
@@ -7,13 +9,21 @@ class Server {
     }
     bootstrap() {
         this.SetupRoutes();
-        return this;
+        this.initBodyParser();
+        return this.app;
     }
     SetupRoutes() {
-        this.app.get('/health-check', (req, res, next) => {
+        const { app } = this;
+        app.use('/health-check', (req, res, next) => {
             res.send('I am Ok');
         });
-        return this;
+        app.use(notFoundHandler);
+
+        app.use(errorHandler);
+    }
+    public initBodyParser() {
+        const { app } = this;
+        app.use(bodyparser.urlencoded({ extended: false }));
     }
 
     run() {
