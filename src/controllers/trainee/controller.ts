@@ -1,3 +1,4 @@
+import { Request, Response, NextFunction } from 'express';
 class TraineeController {
     static instance: TraineeController;
 
@@ -8,64 +9,83 @@ class TraineeController {
         TraineeController.instance = new TraineeController();
         return TraineeController.instance;
     }
-    get(req, res, next) {
+    get(req: Request, res: Response, next: NextFunction) {
         try {
-            res.send({
+            res.status(200).send({
                 message: 'Trainees fetched successfully',
                 data: [
                     {
                         name: 'trainee1',
                         address: 'Noida'
                     }
-                ]
+                ],
+                status: 'success'
             });
 
         } catch ( err ) {
-            console.log('inside err', err);
+            // TODO: will ship below logic in next assignment
+
+            return next({
+                error: 'bad request',
+                message: err,
+                status: 400
+            });
 
         }
     }
-    create(req, res, next) {
+    create(req: Request, res: Response, next: NextFunction) {
         try {
-            console.log('inside post method of trainee controller');
-
-            res.send({
+            res.status(200).send({
                 message: 'trainees created successfully',
                 data: {
                     name: 'trainee1',
                     address: 'noida'
-                }
+                },
+                status: 'success'
             });
         } catch (err) {
-            console.log('inside err', err);
+            // TODO: will ship below logic in next assignment
+
+            return next({
+                error: 'bad request',
+                message: err,
+                status: 400
+            });
+            }
         }
-    }
-    update(req, res, next) {
+    update(req: Request, res: Response, next: NextFunction) {
         try {
-            console.log('inside update method of trainee controller');
-            res.send({
-                message: 'trainees created successfully',
+            res.status(200).send({
+                message: 'trainees update successfully',
                 data: {
                     name: 'trainee1',
                     address: 'noida'
-                }
+                },
+                status: 'success'
             });
         } catch (err) {
-            console.log('inside err', err);
+            // TODO: will ship below logic in next assignment
+            return next({
+                error: 'bad request',
+                message: err,
+                status: 400
+            });
         }
     }
-    Delete(req, res, next) {
+    Delete(req: Request, res: Response, next: NextFunction) {
         try {
-            console.log('inside delete method');
-            res.send({
+            res.status(200).send({
                 message: 'trainees deleted successfully',
-                data: {
-                    name: 'trainee1',
-                    address: 'noida'
-                }
+                data: {},
+                status: 'success'
             });
         } catch (err) {
-            console.log('inside err', err);
+            // TODO: will ship below logic in next assignment
+            return next({
+                error: 'bad request',
+                message: err,
+                status: 400
+            });
         }
     }
 }

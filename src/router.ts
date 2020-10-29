@@ -1,4 +1,4 @@
-// import * as express from 'express';
+
 import { Router } from 'express';
 import { traineeRouter } from './controllers/trainee';
 

@@ -1,7 +1,7 @@
-import * as express from 'express';
-// import { Router } from 'express';
+
+import { Router } from 'express';
 import traineeController from './controller';
-const traineeRouter =  express.Router();
+const traineeRouter =  Router();
 
 traineeRouter.route('/')
     .get(traineeController.get)
