@@ -26,6 +26,7 @@ class Server {
     }
     public initBodyParser() {
         const { app } = this;
+        app.use(bodyparser.json());
         app.use(bodyparser.urlencoded({ extended: false }));
     }
 
