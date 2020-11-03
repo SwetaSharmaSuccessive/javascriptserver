@@ -3,29 +3,20 @@ import { NextFunction, Request, Response } from 'express';
 
 export default ( config ) => ( req: Request, res: Response, next: NextFunction  ) => {
     const errors = [];
-    console.log( 'Inside ValidationHandler Middleware' );
-    console.log( req.body );
+     console.log( req.body );
     console.log( req.query );
     const keys = Object.keys( config );
     keys.forEach((key) => {
         const obj = config[key];
-        console.log('key is' , key);
         const values = obj.in.map( ( val ) => {
             return req[ val ][ key ];
-                });
-
-        // Checking for In i.e Body or Query
-        console.log('body is', req[obj.in]);
-        // console.log('body', Object.keys( req[obj.in] ).length );
+        });
         if (Object.keys( req[obj.in] ).length === 0) {
             errors.push({
                 message: `Values should be passed through ${obj.in}`,
                 status: 400
             });
         }
-
-        // Checking for required
-        console.log('values is' , values);
         if (obj.required) {
             if (isNull(values[0])) {
                 errors.push({

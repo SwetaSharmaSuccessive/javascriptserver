@@ -5,6 +5,7 @@ const config = {
             string: true,
             in: ['body'],
             custom(value) {
+                // NOTE: maybe used later
                 console.log('Value', value);
                 throw {
                     error: 'Error Occured',
@@ -53,6 +54,7 @@ const config = {
             required: true,
             isObject: true,
             custom(dataToUpdate) {
+                // NOTE: maybe used later
                 console.log('dataToUpdate', dataToUpdate);
             },
         }
