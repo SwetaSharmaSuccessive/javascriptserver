@@ -1,13 +1,22 @@
-import *as jwt from 'jsonwebtoken';
-
+import * as jwt from 'jsonwebtoken';
+import hasPermissions from '../permissions';
 export default(module, permissionType) => (req, res, next) => {
     try {
         console.log('config is', module, permissionType);
-        console.log('header is', req.headers['authorization']);
-        const token = req.headers['authorization'];
-        const decodeUser = jwt.verify(token, ' qwertyuiopasdfghjklzxcvbnm123456');
+        const head = 'authorization';
+        console.log('header is', req.headers[head]);
+        const token = req.headers[head];
+        const decodeUser = jwt.verify(token, 'qwertyuiopasdfghjklzxcvbnm123456');
         console.log('User', decodeUser);
-        next();
+        if (hasPermissions(module, decodeUser.role, permissionType)) {
+            next();
+        }
+        else {
+            next({
+                error: 403,
+                message: 'Unauthorized'
+            });
+        }
     } catch ( err ) {
         next({
             error: 'Unauthorized',
