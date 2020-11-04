@@ -16,8 +16,10 @@ class Database {
 
     });
 }
-    disconnect() {
-        console.log();
+    static disconnect() {
+        console.log('Disconnected');
+        mongoose.connection.close();
+
     }
 }
 export default Database;
