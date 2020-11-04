@@ -3,6 +3,7 @@ import { IConfig } from './config/IConfig';
 import * as bodyparser from 'body-parser';
 import { notFoundHandler, errorHandler } from './libs/routes';
 import routes from './router';
+import Database from './libs/database';
 class Server {
     private app: any;
     constructor(private config: IConfig) {
@@ -31,12 +32,17 @@ class Server {
 
     run() {
         const { PORT } = this.config;
-        this.app.listen(PORT, (err) => {
-            if (err) {
-                console.log('error:', err);
-            }
-            console.log(`Server is up and running on port ${PORT}`);
-        });
+        Database.open('mongodb://localhost:27017/express-training')
+           .then((res) => {
+                console.log('successfully connected to mongo');
+                this.app.listen(PORT, (err) => {
+                if (err) {
+                    console.log('error:', err);
+                }
+                console.log(`Server is up and running on port ${PORT}`);
+                });
+
+            });
         return this;
     }
 }
