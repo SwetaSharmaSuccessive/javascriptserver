@@ -9,12 +9,12 @@ class Server {
     constructor(private config: IConfig) {
         this.app = express();
     }
-    bootstrap() {
+    public bootstrap() {
         this.initBodyParser();
-        this.SetupRoutes();
+        this.setupRoutes();
         return this.app;
     }
-    SetupRoutes() {
+    public setupRoutes() {
         const { app } = this;
         app.use('/health-check', (req, res, next) => {
             res.send('I am Ok');
@@ -31,7 +31,7 @@ class Server {
         app.use(bodyparser.urlencoded({ extended: false }));
     }
 
-    run() {
+    public run() {
         const { port, mongo_url } = this.config;
         Database.open(mongo_url)
             .then((res) => {

@@ -1,7 +1,7 @@
 import  * as mongoose from 'mongoose';
 
 class Database {
-    static open(mongoURL) {
+    public static open(mongoURL) {
         return new Promise((resolve, reject) => {
             const options = {
                 useNewUrlParser: true,
@@ -16,7 +16,7 @@ class Database {
 
     });
 }
-    static disconnect() {
+    public static disconnect() {
         console.log('Disconnected');
         mongoose.connection.close();
 
