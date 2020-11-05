@@ -42,7 +42,7 @@ class Server {
                     }
                     else {
                     console.log(`Server is up and running on port ${PORT}`);
-                    Database.disconnect();
+                    // Database.disconnect();
                     }
                 });
             })
