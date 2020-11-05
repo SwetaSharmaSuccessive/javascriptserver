@@ -31,12 +31,4 @@ export default (module, permissionType) => (req, res, next) => {
             status: 403
         });
     }
-    // if (!hasPermissions(module, user.role, permissionType)) {
-    //     next({
-    //         message: 'Permission denied',
-    //         error: 'Unauthorized Access',
-    //         status: 403
-    //     });
-    // }
-    // next();
 };
