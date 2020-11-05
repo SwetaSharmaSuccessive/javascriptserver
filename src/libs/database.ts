@@ -1,5 +1,5 @@
 import  * as mongoose from 'mongoose';
-
+import seedData from './seedData';
 class Database {
     public static open(mongoURL) {
         return new Promise((resolve, reject) => {
@@ -11,7 +11,8 @@ class Database {
             if ( err ) {
                 return reject(err);
             }
-            resolve();
+        seedData();
+        resolve();
         });
 
     });
