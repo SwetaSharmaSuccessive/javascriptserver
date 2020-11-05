@@ -32,17 +32,16 @@ class Server {
     }
 
     run() {
-        const { PORT } = this.config;
-        Database.open('mongodb://localhost:27017/express-training')
+        const { port, mongo_url } = this.config;
+        Database.open(mongo_url)
             .then((res) => {
                 console.log('successfully connected to mongo');
-                this.app.listen(PORT, (err) => {
+                this.app.listen(port, (err) => {
                     if (err) {
                         console.log('error:', err);
                     }
                     else {
-                    console.log(`Server is up and running on port ${PORT}`);
-                    // Database.disconnect();
+                    console.log(`Server is up and running on port ${port}`);
                     }
                 });
             })
