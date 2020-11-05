@@ -31,12 +31,12 @@ class Server {
     }
 
     run() {
-        const { PORT } = this.config;
-        this.app.listen(PORT, (err) => {
+        const { port } = this.config;
+        this.app.listen(port, (err) => {
             if (err) {
                 console.log('error:', err);
             }
-            console.log(`Server is up and running on port ${PORT}`);
+            console.log(`Server is up and running on port ${port}`);
         });
         return this;
     }
