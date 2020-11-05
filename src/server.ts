@@ -20,9 +20,7 @@ class Server {
             res.send('I am Ok');
         });
         app.use('/api', routes);
-
         app.use(notFoundHandler);
-
         app.use(errorHandler);
     }
     public initBodyParser() {
