@@ -2,7 +2,7 @@ import * as jwt from 'jsonwebtoken';
 import hasPermissions from '../permissions';
 import configuration from '../../config/configuration';
 export default (module, permissionType) => (req, res, next) => {
-    const secretKey = configuration.secretKey;
+    const secretKey = configuration.SECRET;
     const head = 'authorization';
     const token = req.headers[head];
     let user;
