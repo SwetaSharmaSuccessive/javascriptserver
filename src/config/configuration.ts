@@ -7,7 +7,7 @@ const envVars: NodeJS.ProcessEnv = process.env;
 const configuration: IConfig = Object.freeze({
     NODE_ENV: process.env.NODE_ENV ,
     PORT: process.env.PORT,
-    secretKey: process.env.secretKey
+    secretKey: process.env.SECRET
 });
 console.log('config is', configuration);
 export default configuration;

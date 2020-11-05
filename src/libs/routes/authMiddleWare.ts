@@ -25,7 +25,7 @@ export default (module, permissionType) => (req, res, next) => {
     }
     if (!hasPermissions(module, user.role, permissionType)) {
         next({
-            message: 'permission denied',
+            message: 'Permission denied',
             error: 'Unauthorized Access',
             status: 403
         });
