@@ -3,9 +3,7 @@ import hasPermissions from '../permissions';
 import configuration from '../../config/configuration';
 export default (module, permissionType) => (req, res, next) => {
     const secretKey = configuration.secretKey;
-    console.log('config is', module, permissionType);
     const head = 'authorization';
-    console.log('header is', req.headers[head]);
     const token = req.headers[head];
     let user;
     if (!token) {
