@@ -3,9 +3,6 @@ import { permissions } from '../../extraTs/constant';
 
 const hasPermissions = (moduleName: string, role: string, permissionType: string): boolean => {
     try {
-        console.log( 'module is ' , moduleName );
-        console.log( 'role is ' , role );
-        console.log( 'permission is ' , permissionType );
         if (permissions[moduleName].all.includes(role) || permissions[moduleName][permissionType].includes(role)) {
             console.log(`${role} has ${permissionType} permissions`);
             return true;

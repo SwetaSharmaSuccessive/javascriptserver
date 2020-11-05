@@ -1,26 +1,42 @@
 import * as jwt from 'jsonwebtoken';
 import hasPermissions from '../permissions';
-export default(module, permissionType) => (req, res, next) => {
-    try {
-        console.log('config is', module, permissionType);
-        const head = 'authorization';
-        console.log('header is', req.headers[head]);
-        const token = req.headers[head];
-        const decodeUser = jwt.verify(token, 'qwertyuiopasdfghjklzxcvbnm123456');
-        console.log('User', decodeUser);
-        if (hasPermissions(module, decodeUser.role, permissionType)) {
-            next();
-        }
-        else {
-            next({
-                error: 403,
-                message: 'Unauthorized'
-            });
-        }
-    } catch ( err ) {
+import configuration from '../../config/configuration';
+export default (module, permissionType) => (req, res, next) => {
+    const secretKey = configuration.secret;
+    const head = 'authorization';
+    const token = req.headers[head];
+    let user;
+    if (!token) {
         next({
-            error: 'Unauthorized',
+            message: 'Token not found',
+            error: 'Authentication failed',
             status: 403
         });
     }
+    try {
+        user = jwt.verify(token, secretKey);
+        console.log('User', user);
+        if (!hasPermissions(module, user.role, permissionType)) {
+            next({
+                message: 'Permission denied',
+                error: 'Unauthorized Access',
+                status: 403
+            });
+        }
+        next();
+    } catch (err) {
+        next({
+            message: 'User is unauthorized',
+            error: 'Unauthorized Access',
+            status: 403
+        });
+    }
+    // if (!hasPermissions(module, user.role, permissionType)) {
+    //     next({
+    //         message: 'Permission denied',
+    //         error: 'Unauthorized Access',
+    //         status: 403
+    //     });
+    // }
+    // next();
 };
