@@ -16,6 +16,14 @@ export default (module, permissionType) => (req, res, next) => {
     try {
         user = jwt.verify(token, secretKey);
         console.log('User', user);
+        if (!hasPermissions(module, user.role, permissionType)) {
+            next({
+                message: 'Permission denied',
+                error: 'Unauthorized Access',
+                status: 403
+            });
+        }
+        next();
     } catch (err) {
         next({
             message: 'User is unauthorized',
@@ -23,12 +31,4 @@ export default (module, permissionType) => (req, res, next) => {
             status: 403
         });
     }
-    if (!hasPermissions(module, user.role, permissionType)) {
-        next({
-            message: 'Permission denied',
-            error: 'Unauthorized Access',
-            status: 403
-        });
-    }
-    next();
 };
