@@ -5,7 +5,7 @@ import IUserModel from './IUserModel';
 
 export default class UserRepository {
     public static generateObjectId() {
-        return String (mongoose.Types.ObjectId());
+        return String(mongoose.Types.ObjectId());
     }
     public findOne(query): mongoose.DocumentQuery<IUserModel, IUserModel, {} > {
         return userModel.findOne(query).lean();

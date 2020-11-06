@@ -1,5 +1,4 @@
 import * as mongoose from 'mongoose';
-import { stringify } from 'querystring';
 
 class UserSchema  extends mongoose.Schema {
     constructor(collections: any) {

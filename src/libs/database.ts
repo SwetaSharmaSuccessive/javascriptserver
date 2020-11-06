@@ -7,12 +7,12 @@ class Database {
                 useNewUrlParser: true,
                 useUnifiedTopology: true
             };
-        mongoose.connect(mongoURL, options, (err) => {
-            if ( err ) {
-                return reject(err);
-            }
-        seedData();
-        resolve();
+            mongoose.connect(mongoURL, options, (err) => {
+                if ( err ) {
+                    return reject(err);
+                }
+            seedData();
+            resolve();
         });
 
     });
