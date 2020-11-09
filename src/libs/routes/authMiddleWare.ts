@@ -16,6 +16,8 @@ export default (module, permissionType) => (req, res, next) => {
     try {
         user = jwt.verify(token, secretKey);
         console.log('User', user);
+        req.userData = user.result;
+        console.log( user.result.role );
         if (!hasPermissions(module, user.role, permissionType)) {
             next({
                 message: 'Permission denied',
