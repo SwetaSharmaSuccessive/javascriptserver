@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { userModel } from '../../repositories/user/UserModel';
 import * as jwt from 'jsonwebtoken';
+import  UserRepository  from '../../repositories/user/UserRepository';
+import configuration from '../../config/configuration';
 class UserController {
     static instance: UserController;
 
@@ -17,6 +19,7 @@ class UserController {
             res.send({
                 message: 'User fetched successfully',
                 data: [{
+                    data: req.user,
                     name: 'Trainee',
                     address: 'Noida'
                 }]
@@ -67,45 +70,52 @@ class UserController {
             console.log('Inside err', err);
         }
     }
-    login( req: Request, res: Response, next: NextFunction ) {
+    login(req: Request, res: Response, next: NextFunction) {
         try {
-            const { email, password } = req.body;
-            userModel.findOne ( { email: req.body.email }, (err, result ) => {
-                if ( result ) {
-                    if ( password === result.password) {
-                        const token = jwt.sign( {
-                            result
-                        }, 'secret');
-                        res.send({
-                            data: token,
-                            message: 'Login Successful',
-                            status: 200
+            const secretKey = configuration.secret;
+            const payload = {
+                'iss': 'successive technologies',
+                'iat': 1604767536,
+                'exp': 1636303559,
+                'aud': 'peers',
+                'sub': 'profile setup',
+                'email': req.body.email,
+                'password': req.body.password
+            };
+            UserRepository.findOne({ email: req.body.email, passsword: req.body.passsword })
+                .then((data) => {
+                    if (data === null) {
+                        next({
+                            message: 'user not found',
+                            error: 'Unauthorized Access',
+                            status: 403
                         });
                     }
                     else {
-                        res.send({
-                            message: 'Incorrect Password',
-                            status: 400
+                        const token = jwt.sign(payload, secretKey);
+                        res.status(200).send({
+                            message: 'token created successfully',
+                            data: {
+                                generated_token: token
+                            },
+                            status: 'success'
                         });
                     }
-                }
-                else {
-                    res.send({
-                        message: 'Email is not Registered',
-                        status: 404
-                    });
-                }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+
+        }
+        catch (err) {
+            return next({
+                error: 'bad request',
+                message: err,
+                status: 400
             });
         }
-        catch ( err ) {
-            res.send(err);
-        }
+
     }
-    me(req: Request, res: Response, next: NextFunction) {
-        const data = req.userData;
-        res.json({
-            data
-        });
-    }
+
 }
 export default UserController.getInstance();

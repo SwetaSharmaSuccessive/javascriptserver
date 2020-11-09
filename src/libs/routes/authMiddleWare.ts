@@ -1,11 +1,12 @@
 import * as jwt from 'jsonwebtoken';
 import hasPermissions from '../permissions';
 import configuration from '../../config/configuration';
-export default (module, permissionType) => (req, res, next) => {
+import UserRepository from '../../repositories/user/UserRepository';
+export default (module, permissionType) => async (req, res, next) => {
     const secretKey = configuration.secret;
     const head = 'authorization';
     const token = req.headers[head];
-    let user;
+    let dbUser;
     if (!token) {
         next({
             message: 'Token not found',
@@ -14,11 +15,13 @@ export default (module, permissionType) => (req, res, next) => {
         });
     }
     try {
-        user = jwt.verify(token, secretKey);
-        console.log('User', user);
-        req.userData = user.result;
-        console.log( user.result.role );
-        if (!hasPermissions(module, user.role, permissionType)) {
+        const user = jwt.verify(token, secretKey);
+        // console.log('User', user);
+        // req.userData = user.result;
+        dbUser = await UserRepository.findOne({email: user.email, passsword: user.passsword});
+        req.user = dbUser;
+        //  console.log( user.result.role );
+        if (!hasPermissions(module, dbUser.role, permissionType)) {
             next({
                 message: 'Permission denied',
                 error: 'Unauthorized Access',

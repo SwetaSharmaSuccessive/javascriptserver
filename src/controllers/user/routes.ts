@@ -3,7 +3,7 @@ import UserController from './controller';
 import validationHandler from '../../libs/validationHandler';
 import validation from './validation';
 import { authMiddleWare } from '../../libs/routes';
-import { permissions } from '../../libs/routes/constant';
+// import { permissions } from '../../libs/routes/constant';
 import config from './validation';
 
 const router = Router();
@@ -15,7 +15,7 @@ router.route('/')
     .delete(validationHandler(validation.delete), UserController.update);
 
 router.route('/me')
-    .post(authMiddleWare (permissions.getUsers, 'all'), UserController.me);
+    .get(authMiddleWare ('getUsers', 'all'), UserController.get);
 
 router.route('/login')
     .post( validationHandler ( config.login ) , UserController.login );
