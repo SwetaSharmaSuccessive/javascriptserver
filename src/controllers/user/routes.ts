@@ -1,17 +1,23 @@
 import { Router } from 'express';
 import UserController from './controller';
-
 import validationHandler from '../../libs/validationHandler';
-
 import validation from './validation';
+import { authMiddleWare } from '../../libs/routes';
+import config from './validation';
 
-const UserRouter = Router();
+const router = Router();
 
-UserRouter.route('/')
+router.route('/')
     .get(validationHandler(validation.get), UserController.get)
     .post(validationHandler(validation.create), UserController.create)
     .put(validationHandler(validation.update), UserController.update)
     .delete(validationHandler(validation.delete), UserController.update);
 
+router.route('/me')
+    .get(authMiddleWare ('getUsers', 'all'), UserController.get);
 
-export default UserRouter;
+router.route('/login')
+    .post( validationHandler ( config.login ) , UserController.login );
+
+
+export default router;

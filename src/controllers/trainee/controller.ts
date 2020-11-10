@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+
 class TraineeController {
     static instance: TraineeController;
 
@@ -88,5 +89,6 @@ class TraineeController {
             });
         }
     }
+
 }
 export default TraineeController.getInstance();

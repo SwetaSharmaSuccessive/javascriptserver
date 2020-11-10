@@ -1,3 +1,10 @@
+import { Request, Response, NextFunction } from 'express';
+import { userModel } from '../../repositories/user/UserModel';
+import * as jwt from 'jsonwebtoken';
+import  UserRepository  from '../../repositories/user/UserRepository';
+import configuration from '../../config/configuration';
+import { payload } from '../../libs/routes/constant';
+
 class UserController {
     static instance: UserController;
 
@@ -10,10 +17,10 @@ class UserController {
     }
     get(req, res, next) {
         try {
-            console.log('Inside get method of trainee controller');
             res.send({
                 message: 'User fetched successfully',
                 data: [{
+                    data: req.user,
                     name: 'Trainee',
                     address: 'Noida'
                 }]
@@ -24,7 +31,6 @@ class UserController {
     }
     create(req, res, next) {
         try {
-            console.log('Inside post method of trainee controller');
             res.send({
                 message: 'User created successfully',
                 data: [{
@@ -38,7 +44,6 @@ class UserController {
     }
     update(req, res, next) {
         try {
-            console.log('Inside put method of trainee controller');
             res.send({
                 message: 'User updated successfully',
                 data: [{
@@ -52,7 +57,6 @@ class UserController {
     }
     delete(req, res, next) {
         try {
-            console.log('Inside delete method of trainee controller');
             res.send({
                 message: 'User deleted successfully',
                 data: [{
@@ -64,5 +68,45 @@ class UserController {
             console.log('Inside err', err);
         }
     }
+    login(req: Request, res: Response, next: NextFunction) {
+        try {
+            const secretKey = configuration.secret;
+            payload.email = req.body.email;
+            payload.password = req.body.password;
+            UserRepository.findOne({ email: req.body.email, passsword: req.body.passsword })
+                .then((data) => {
+                    if (data === null) {
+                        next({
+                            message: 'user not found',
+                            error: 'Unauthorized Access',
+                            status: 403
+                        });
+                    }
+                    else {
+                        const token = jwt.sign(payload, secretKey);
+                        res.status(200).send({
+                            message: 'token created successfully',
+                            data: {
+                                generated_token: token
+                            },
+                            status: 'success'
+                        });
+                    }
+                })
+                .catch((err) => {
+                    console.log('data not found', err);
+                });
+
+        }
+        catch (err) {
+            return next({
+                error: 'bad request',
+                message: err,
+                status: 400
+            });
+        }
+
+    }
+
 }
 export default UserController.getInstance();
