@@ -9,7 +9,7 @@ export const permissions: IPermissions = {
         delete: []
     },
 
-    getUsers2: {
+    getNewUser: {
 
         all: ['CEO'],
         read : ['HR dept', 'IT dept'],

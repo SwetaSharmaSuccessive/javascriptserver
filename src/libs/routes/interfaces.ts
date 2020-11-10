@@ -4,7 +4,7 @@ export interface IUsers {
     reviewerEmail: string;
 }
 
-type Users2= {
+type Users= {
     all: string[];
     read: string[];
     write: string [];
@@ -12,6 +12,6 @@ type Users2= {
 };
 
 export interface IPermissions {
-    getUsers: Users2;
-    getUsers2: Users2;
+    getUsers: Users;
+    getNewUser: Users;
 }
