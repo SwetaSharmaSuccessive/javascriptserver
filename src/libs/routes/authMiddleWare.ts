@@ -16,11 +16,8 @@ export default (module, permissionType) => async (req, res, next) => {
     }
     try {
         const user = jwt.verify(token, secretKey);
-        // console.log('User', user);
-        // req.userData = user.result;
         dbUser = await UserRepository.findOne({email: user.email, passsword: user.passsword});
         req.user = dbUser;
-        //  console.log( user.result.role );
         if (!hasPermissions(module, dbUser.role, permissionType)) {
             next({
                 message: 'Permission denied',

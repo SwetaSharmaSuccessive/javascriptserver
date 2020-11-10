@@ -3,6 +3,8 @@ import { userModel } from '../../repositories/user/UserModel';
 import * as jwt from 'jsonwebtoken';
 import  UserRepository  from '../../repositories/user/UserRepository';
 import configuration from '../../config/configuration';
+import { payload } from '../../libs/routes/constant';
+
 class UserController {
     static instance: UserController;
 
@@ -15,7 +17,6 @@ class UserController {
     }
     get(req, res, next) {
         try {
-            console.log('Inside get method of trainee controller');
             res.send({
                 message: 'User fetched successfully',
                 data: [{
@@ -30,7 +31,6 @@ class UserController {
     }
     create(req, res, next) {
         try {
-            console.log('Inside post method of trainee controller');
             res.send({
                 message: 'User created successfully',
                 data: [{
@@ -44,7 +44,6 @@ class UserController {
     }
     update(req, res, next) {
         try {
-            console.log('Inside put method of trainee controller');
             res.send({
                 message: 'User updated successfully',
                 data: [{
@@ -58,7 +57,6 @@ class UserController {
     }
     delete(req, res, next) {
         try {
-            console.log('Inside delete method of trainee controller');
             res.send({
                 message: 'User deleted successfully',
                 data: [{
@@ -73,15 +71,8 @@ class UserController {
     login(req: Request, res: Response, next: NextFunction) {
         try {
             const secretKey = configuration.secret;
-            const payload = {
-                'iss': 'successive technologies',
-                'iat': 1604767536,
-                'exp': 1636303559,
-                'aud': 'peers',
-                'sub': 'profile setup',
-                'email': req.body.email,
-                'password': req.body.password
-            };
+            payload.email = req.body.email;
+            payload.password = req.body.password;
             UserRepository.findOne({ email: req.body.email, passsword: req.body.passsword })
                 .then((data) => {
                     if (data === null) {
@@ -103,7 +94,7 @@ class UserController {
                     }
                 })
                 .catch((err) => {
-                    console.log(err);
+                    console.log('data not found', err);
                 });
 
         }

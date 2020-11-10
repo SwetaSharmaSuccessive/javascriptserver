@@ -3,7 +3,6 @@ import UserController from './controller';
 import validationHandler from '../../libs/validationHandler';
 import validation from './validation';
 import { authMiddleWare } from '../../libs/routes';
-// import { permissions } from '../../libs/routes/constant';
 import config from './validation';
 
 const router = Router();
