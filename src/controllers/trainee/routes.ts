@@ -10,7 +10,7 @@ traineeRouter.route('/')
     .post(authMiddleWare('getUsers', 'write'), validationHandler(validation.create), traineeController.create)
     .put(authMiddleWare('getUsers', 'all'), validationHandler(validation.update), traineeController.update)
     .delete(authMiddleWare('getUsers', 'delete'), validationHandler(validation.delete), traineeController.Delete);
-    traineeRouter.route('/:id')
+traineeRouter.route('/:id')
     .delete(validationHandler(validation.delete), traineeController.Delete);
 
 export default traineeRouter;

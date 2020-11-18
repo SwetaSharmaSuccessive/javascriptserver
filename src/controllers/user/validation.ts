@@ -1,8 +1,8 @@
 const config = {
     create: {
         id: {
-            required: true,
-            string: true,
+            required: false,
+            string: false,
             in: ['body'],
             custom(value) {
                 // NOTE: maybe used later
@@ -31,14 +31,14 @@ const config = {
         skip: {
             required: false,
             default: 0,
-            number: true,
+            number: false,
             in: ['query'],
             errorMessage: 'Skip is invalid',
         },
         limit: {
             required: false,
             default: 10,
-            number: true,
+            number: false,
             in: ['query'],
             errorMessage: 'Limit is invalid',
         }

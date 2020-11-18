@@ -1,23 +1,20 @@
-import { Router } from 'express';
+
+import * as express from 'express';
 import UserController from './controller';
+import { Router } from 'express';
 import validationHandler from '../../libs/validationHandler';
 import validation from './validation';
-import { authMiddleWare } from '../../libs/routes';
+import authMiddleWare from '../../libs/routes/authMiddleWare';
 import config from './validation';
+const Router = express.Router();
 
-const router = Router();
-
-router.route('/')
-    .get(validationHandler(validation.get), UserController.get)
-    .post(validationHandler(validation.create), UserController.create)
-    .put(validationHandler(validation.update), UserController.update)
-    .delete(validationHandler(validation.delete), UserController.update);
-
-router.route('/me')
-    .get(authMiddleWare ('getUsers', 'all'), UserController.get);
-
-router.route('/login')
-    .post( validationHandler ( config.login ) , UserController.login );
+Router.get('/get', authMiddleWare('getUsers', 'read'), validationHandler(validation.get), UserController.get);
+Router.post('/create', authMiddleWare('getUsers', 'all'), validationHandler(validation.create), UserController.create);
+Router.put('/update', authMiddleWare('getUsers', 'write'), validationHandler(validation.update), UserController.update);
+Router.delete('/:id', authMiddleWare('getUsers', 'delete'), validationHandler(validation.delete), UserController.delete);
+Router.post('/login', validationHandler(validation.login), UserController.login);
+Router.get('/me', authMiddleWare('getUsers', 'all'), UserController.me);
 
 
-export default router;
+
+export default Router;

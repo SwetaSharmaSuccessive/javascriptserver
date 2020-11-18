@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 
 class TraineeController {
-    static instance: TraineeController;
 
+    static instance: TraineeController;
     static getInstance() {
         if (TraineeController.instance) {
             return TraineeController.instance;
@@ -10,8 +10,10 @@ class TraineeController {
         TraineeController.instance = new TraineeController();
         return TraineeController.instance;
     }
+
     get(req: Request, res: Response, next: NextFunction) {
-        try {
+        console.log('Inside get request for trainee');
+       try {
             res.status(200).send({
                 message: 'Trainees fetched successfully',
                 data: [
@@ -22,8 +24,8 @@ class TraineeController {
                 ],
                 status: 'success'
             });
-
-        } catch ( err ) {
+        }
+          catch ( err ) {
             // TODO: will ship below logic in next assignment
 
             return next({
@@ -32,7 +34,7 @@ class TraineeController {
                 status: 400
             });
 
-        }
+         }
     }
     create(req: Request, res: Response, next: NextFunction) {
         try {

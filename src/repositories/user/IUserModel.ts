@@ -6,4 +6,5 @@ export default interface IUSerModel extends mongoose.Document {
     email: string;
     role: string;
     password: string;
+
 }
