@@ -11,13 +11,13 @@ export default() => {
                 role: 'head-trainer',
                 email: 'head.trainee@successive.tech',
                 password: 'hello123'
-            }, undefined);
+            });
             userRepository.create({
                 name: 'Trainee',
                 role: 'trainee',
                 email: 'trainee@successive.tech',
                 password: 'trainee123'
-            }, undefined);
+            });
         }
        })
         .catch(err => console.log(err));
