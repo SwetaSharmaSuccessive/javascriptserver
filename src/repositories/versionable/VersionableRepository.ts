@@ -26,19 +26,19 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
         const finalQuery = { deletedAt: undefined, ...query };
         return this.model.count(finalQuery);
     }
-    public findOne(query: any): DocumentQuery<D, D> {
+    public async findOne(query: any): Promise<D> {
         console.log(this.model);
         const finalQuery = { deletedAt: undefined, ...query };
-        return this.model.findOne(finalQuery);
+        return await this.model.findOne(finalQuery);
     }
-    public findAll(query: any, projection: any, options: any): DocumentQuery<D[], D> {
+    public async findAll(query: any, projection: any, options: any): Promise<D[]> {
         const finalQuery = { deletedAt: undefined, ...query };
-        return this.model.find(finalQuery, projection, options);
+        return await this.model.find(finalQuery, projection, options);
     }
-    public invalidate(id: string): DocumentQuery<D, D> {
+    public async invalidate(id: string): Promise<D> {
         const query: any = { originalId: id, deletedAt: { $exists: false } };
         const data: any = { deletedAt: Date.now() };
-        return this.model.updateOne(query, data);
+        return await this.model.updateOne(query, data);
     }
     public async delete(id: string): Promise<D> {
         const previous = await this.findOne({ originalId: id, deletedAt: undefined });

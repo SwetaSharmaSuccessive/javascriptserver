@@ -17,17 +17,11 @@ export default class UserRepository extends VersionableRepository<IUserModel, mo
     }
 
     public create(data: any): Promise<IUserModel> {
-        console.log('User Data:', data);
-        const id = UserRepository.generateObjectId();
-        const model = new userModel({
-            _id: id,
-            ...data,
-            originalId: id,
-        });
-        return model.save();
+        return super.userCreate(data);
     }
 
     public count() {
         return userModel.countDocuments();
     }
+
 }
