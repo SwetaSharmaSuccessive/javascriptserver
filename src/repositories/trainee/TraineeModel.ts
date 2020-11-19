@@ -3,13 +3,13 @@ import * as mongoose from 'mongoose';
 import TraineeSchema from './TraineeSchema';
 import ITraineeModel from './ITraineeModel';
 
-export const userSchema = new TraineeSchema({
-    collections: 'user',
+export const traineeSchema = new TraineeSchema({
+    collections: 'Trainee',
 });
 
-export const traineeModel: mongoose.Model<ITraineeModel> = mongoose.model<ITraineeModel> (
-    'User',
-    userSchema,
-    'User',
+export const TraineeModel: mongoose.Model<ITraineeModel> = mongoose.model<ITraineeModel> (
+    'Trainee',
+    traineeSchema,
+    'Trainee',
     true,
 );

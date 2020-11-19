@@ -1,27 +1,36 @@
 
 import * as mongoose from 'mongoose';
-import { traineeModel } from './TraineeModel';
+import { TraineeModel } from './TraineeModel';
 import ITraineeModel from './ITraineeModel';
 import VersionableRepository from '../versionable/VersionableRepository';
 
-export default class UserRepository extends VersionableRepository<ITraineeModel, mongoose.Model<ITraineeModel>> {
+export default class TraineeRepository extends VersionableRepository<ITraineeModel, mongoose.Model<ITraineeModel>> {
 
     public static generateObjectId() {
         return String(mongoose.Types.ObjectId());
     }
     constructor() {
-        super(traineeModel);
+        super(TraineeModel);
     }
     public static findOne(query): mongoose.DocumentQuery<ITraineeModel, ITraineeModel, {}> {
-        return traineeModel.findOne(query).lean();
+        return TraineeModel.findOne(query).lean();
     }
 
     public create(data: any): Promise<ITraineeModel> {
-        return super.userCreate(data);
+        return super.create(data);
     }
+    public delete(id: string): Promise<ITraineeModel> {
+        return super.delete(id);
+    }
+    public update(data: any): Promise<ITraineeModel> {
+        return super.update(data);
+    }
+    public async get(query: any, projection: any, options: any): Promise<ITraineeModel[]> {
+        return super.get(query, projection, options);
 
-    public count() {
-        return traineeModel.countDocuments();
+    }
+    public count(query: any) {
+        return super.count(query);
     }
 
 }

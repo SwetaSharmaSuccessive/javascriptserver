@@ -20,7 +20,7 @@ class UserController {
     }
     public get =  async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const extractedData = await this.userRepository.findAll(req.body, {}, {});
+            const extractedData = await this.userRepository.get(req.body, {}, {});
             res.status(200).send({
                 message: 'User fetched successfully',
                 data: extractedData,
@@ -32,8 +32,7 @@ class UserController {
     }
     public create = async(req: Request, res: Response, next: NextFunction) => {
         try {
-            const result = req.body;
-            await this.userRepository.userCreate(result);
+            const result = await this.userRepository.create(req.body);
             res.status(200).send({
                 message: 'User created successfully',
                 data: result,
@@ -45,8 +44,7 @@ class UserController {
     }
     public update = async(req: Request, res: Response, next: NextFunction) => {
         try {
-            const result = req.body;
-            await this.userRepository.userUpdate(result);
+            const result = await this.userRepository.update(req.body);
             res.status(200).send({
                 message: 'User updated successfully',
                 data: result
@@ -57,15 +55,14 @@ class UserController {
     }
     public delete = async(req: Request, res: Response, next: NextFunction) => {
         try {
-            const result =  req.params.id;
-            await this.userRepository.delete(result);
+            const result =   await this.userRepository.delete(req.params.id);
+            // await this.userRepository.delete(req.params.id);
             res.status(200).send({
                 message: 'User deleted successfully',
-                data: [
+                data:
                     {
-                        Id: result
-                    }
-                ],
+
+                    },
                 status: 'success',
             });
         } catch (err) {

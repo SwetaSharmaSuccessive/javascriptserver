@@ -4,6 +4,7 @@ import { userModel } from './UserModel';
 import IUserModel from './IUserModel';
 import VersionableRepository from '../versionable/VersionableRepository';
 
+
 export default class UserRepository extends VersionableRepository<IUserModel, mongoose.Model<IUserModel>> {
 
     public static generateObjectId() {
@@ -17,11 +18,20 @@ export default class UserRepository extends VersionableRepository<IUserModel, mo
     }
 
     public create(data: any): Promise<IUserModel> {
-        return super.userCreate(data);
+        return super.create(data);
     }
+    public delete(id: string): Promise<IUserModel> {
+        return super.delete(id);
+    }
+    public update(data: any): Promise<IUserModel> {
+        return super.update(data);
+    }
+    public async get(query: any, projection: any, options: any): Promise<IUserModel[]> {
+        return super.get(query, projection, options);
 
-    public count() {
-        return userModel.countDocuments();
+    }
+    public count(query: any) {
+        return super.count(query);
     }
 
 }
