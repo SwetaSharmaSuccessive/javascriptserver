@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
 import  VersionableSchema  from '../versionable/VersionableSchema';
 
-export default class UserSchema  extends VersionableSchema {
+export default class TraineeSchema  extends VersionableSchema {
     constructor(collections: any) {
         const baseSchema = Object.assign({
             id: String,

@@ -1,13 +1,11 @@
-import { Request, Response, NextFunction } from 'express';
-import { userModel } from '../../repositories/user/UserModel';
 import * as jwt from 'jsonwebtoken';
-import  UserRepository  from '../../repositories/user/UserRepository';
-import configuration from '../../config/configuration';
+import { Request, Response, NextFunction } from 'express';
+import  configuration  from '../../config/configuration';
 import { payload } from '../../libs/routes/constant';
+import UserRepository from '../../repositories/user/UserRepository';
 
 class UserController {
     static instance: UserController;
-
     static getInstance() {
         if (UserController.instance) {
             return UserController.instance;
@@ -15,57 +13,60 @@ class UserController {
         UserController.instance = new UserController();
         return UserController.instance;
     }
-    get(req, res, next) {
+    private userRepository: UserRepository;
+    constructor() {
+        this.userRepository = new UserRepository();
+
+    }
+    public get =  async (req: Request, res: Response, next: NextFunction) => {
         try {
-            res.send({
+            const extractedData = await this.userRepository.get(req.body, {}, {});
+            res.status(200).send({
                 message: 'User fetched successfully',
-                data: [{
-                    data: req.user,
-                    name: 'Trainee',
-                    address: 'Noida'
-                }]
+                data: extractedData,
+                status: 'success',
             });
         } catch (err) {
-            console.log('Inside err', err);
+            console.log('error is ', err);
         }
     }
-    create(req, res, next) {
+    public create = async(req: Request, res: Response, next: NextFunction) => {
         try {
-            res.send({
+            const result = await this.userRepository.create(req.body);
+            res.status(200).send({
                 message: 'User created successfully',
-                data: [{
-                    name: 'Trainee1',
-                    address: 'Noida'
-                }]
+                data: result,
+                status: 'success',
             });
         } catch (err) {
-            console.log('Inside err', err);
+            console.log('error is ', err);
         }
     }
-    update(req, res, next) {
+    public update = async(req: Request, res: Response, next: NextFunction) => {
         try {
-            res.send({
+            const result = await this.userRepository.update(req.body);
+            res.status(200).send({
                 message: 'User updated successfully',
-                data: [{
-                    name: 'Trainee2',
-                    address: 'Noida'
-                }]
+                data: result
             });
         } catch (err) {
-            console.log('Inside err', err);
+            console.log('error is ', err);
         }
     }
-    delete(req, res, next) {
+    public delete = async(req: Request, res: Response, next: NextFunction) => {
         try {
-            res.send({
+            const result =   await this.userRepository.delete(req.params.id);
+            // await this.userRepository.delete(req.params.id);
+            res.status(200).send({
                 message: 'User deleted successfully',
-                data: [{
-                    name: 'Trainee3',
-                    address: 'Noida'
-                }]
+                data:
+                    {
+
+                    },
+                status: 'success',
             });
         } catch (err) {
-            console.log('Inside err', err);
+            console.log('error is ', err);
         }
     }
     login(req: Request, res: Response, next: NextFunction) {
@@ -105,8 +106,7 @@ class UserController {
                 status: 400
             });
         }
-
     }
-
 }
+
 export default UserController.getInstance();
