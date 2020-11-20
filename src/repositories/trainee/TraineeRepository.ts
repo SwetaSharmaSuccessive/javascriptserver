@@ -1,4 +1,4 @@
-
+import * as bcrypt from 'bcrypt';
 import * as mongoose from 'mongoose';
 import { TraineeModel } from './TraineeModel';
 import ITraineeModel from './ITraineeModel';
@@ -17,12 +17,25 @@ export default class TraineeRepository extends VersionableRepository<ITraineeMod
     }
 
     public create(data: any): Promise<ITraineeModel> {
+        const rawPassword = data.password;
+        const saltRounds = 10;
+        const salt = bcrypt.genSaltSync(saltRounds);
+        const hashedPassword = bcrypt.hashSync(rawPassword, salt);
+        data.password = hashedPassword;
+        console.log('data password: ', data.password);
         return super.create(data);
     }
     public delete(id: string): Promise<ITraineeModel> {
         return super.delete(id);
     }
     public update(data: any): Promise<ITraineeModel> {
+        if ('password' in data) {
+            const rawPassword = data.password;
+            const saltRounds = 10;
+            const salt = bcrypt.genSaltSync(saltRounds);
+            const hashedPassword = bcrypt.hashSync(rawPassword, salt);
+            data.password = hashedPassword;
+        }
         return super.update(data);
     }
     public async get(query: any, projection: any, options: any): Promise<ITraineeModel[]> {

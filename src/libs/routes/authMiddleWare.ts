@@ -2,13 +2,13 @@ import * as jwt from 'jsonwebtoken';
 import hasPermissions from '../permissions';
 import configuration from '../../config/configuration';
 import UserRepository from '../../repositories/user/UserRepository';
-export default (module, permissionType) =>  (req, res, next) => {
+export default (module, permissionType) =>  async (req, res, next) => {
     const secretKey = configuration.secret;
     const head = 'authorization';
     const token = req.headers[head];
     let dbUser;
     if (!token) {
-        next({
+        return next({
             message: 'Token not found',
             error: 'Authentication failed',
             status: 403
@@ -17,16 +17,16 @@ export default (module, permissionType) =>  (req, res, next) => {
     try {
         const user = jwt.verify(token, secretKey);
         console.log('user: ', user);
-        dbUser =  UserRepository.findOne({originalId: user.id});
+        dbUser =  await UserRepository.findOne({email: user.email});
         if (!dbUser) {
-            next({
+            return next({
                 error: 'Unauthorized',
                 message: 'permission Denied',
                 status: 403
             });
         }
-        req.user = user;
-        if (!hasPermissions(module, user.role, permissionType)) {
+        req.user = dbUser;
+        if (!hasPermissions(module, dbUser.role, permissionType)) {
             next({
                 message: 'Permission denied',
                 error: 'Unauthorized Access',

@@ -1,7 +1,7 @@
 const config = {
     create: {
         id: {
-            required: true,
+            required: false,
             string: true,
             in: ['body'],
             custom(value) {
@@ -45,13 +45,13 @@ const config = {
     },
     update: {
         id: {
-            required: true,
+            required: false,
             string: true,
             in: ['body']
         },
         dataToUpdate: {
             in: ['body'],
-            required: true,
+            required: false,
             isObject: true,
             custom(dataToUpdate) {
                 // NOTE: maybe used later

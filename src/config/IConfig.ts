@@ -3,4 +3,5 @@ export interface IConfig {
     port: string;
     mongo_url: string;
     secret: string;
+    password: string;
   }

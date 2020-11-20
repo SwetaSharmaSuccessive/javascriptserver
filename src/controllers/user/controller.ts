@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import  configuration  from '../../config/configuration';
 import { payload } from '../../libs/routes/constant';
 import UserRepository from '../../repositories/user/UserRepository';
+import * as bcrypt from 'bcrypt';
 
 class UserController {
     static instance: UserController;
@@ -56,7 +57,6 @@ class UserController {
     public delete = async(req: Request, res: Response, next: NextFunction) => {
         try {
             const result =   await this.userRepository.delete(req.params.id);
-            // await this.userRepository.delete(req.params.id);
             res.status(200).send({
                 message: 'User deleted successfully',
                 data:
@@ -69,35 +69,56 @@ class UserController {
             console.log('error is ', err);
         }
     }
-    login(req: Request, res: Response, next: NextFunction) {
+    async login(req: Request, res: Response, next: NextFunction) {
         try {
             const secretKey = configuration.secret;
+            console.log(secretKey);
             payload.email = req.body.email;
-            payload.password = req.body.password;
-            UserRepository.findOne({ email: req.body.email, passsword: req.body.passsword })
-                .then((data) => {
+            console.log(payload.email);
+            const data = await UserRepository.findOne({ email: req.body.email});
+            console.log(data.password);
+            console.log(req.body.password);
                     if (data === null) {
                         next({
-                            message: 'user not found',
+                            message: 'Email not found',
                             error: 'Unauthorized Access',
                             status: 403
                         });
                     }
-                    else {
-                        const token = jwt.sign(payload, secretKey);
-                        res.status(200).send({
-                            message: 'token created successfully',
-                            data: {
-                                generated_token: token
-                            },
-                            status: 'success'
+                        const matchPassword = await bcrypt.compareSync(req.body.password, data.password);
+                        console.log(matchPassword);
+                        if (matchPassword) {
+                            const token = jwt.sign(payload, secretKey);
+                            res.status(200).send({
+                                message: 'token created successfully',
+                                data: {
+                                    generated_token: token
+                                },
+                                status: 'success'
+                            });
+                        }
+                        else {
+                        next({
+                            error: 'token not found',
+                            status: 400
                         });
                     }
-                })
-                .catch((err) => {
-                    console.log('data not found', err);
-                });
 
+        }
+        catch (err) {
+            return next({
+                error: 'bad request',
+                message: err,
+                status: 400
+            });
+        }
+    }
+
+    async me(req, res, next) {
+        try {
+            res.send({
+                data: (req.user),
+            });
         }
         catch (err) {
             return next({

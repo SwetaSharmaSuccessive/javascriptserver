@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import  configuration  from '../../config/configuration';
 import { payload } from '../../libs/routes/constant';
 import * as jwt from 'jsonwebtoken';
+import * as bcrypt from 'bcrypt';
 import TraineeRepository from '../../repositories/trainee/TraineeRepository';
 class TraineeController {
     private traineeRepository: TraineeRepository;
@@ -65,21 +66,22 @@ class TraineeController {
             console.log('error is ', err);
         }
     }
-    login(req: Request, res: Response, next: NextFunction) {
+    async login(req: Request, res: Response, next: NextFunction) {
         try {
             const secretKey = configuration.secret;
+            console.log(secretKey);
             payload.email = req.body.email;
-            payload.password = req.body.password;
-            this.traineeRepository.findOne({ email: req.body.email, passsword: req.body.passsword })
-                .then((data) => {
+            console.log(payload.email);
+            const data = await TraineeRepository.findOne({ email: req.body.email});
                     if (data === null) {
                         next({
-                            message: 'Trainee not found',
+                            message: 'Email not found',
                             error: 'Unauthorized Access',
                             status: 403
                         });
                     }
                     else {
+                        const matchPassword = bcrypt .compare(req.body.password, data.password);
                         const token = jwt.sign(payload, secretKey);
                         res.status(200).send({
                             message: 'token created successfully',
@@ -89,11 +91,22 @@ class TraineeController {
                             status: 'success'
                         });
                     }
-                })
-                .catch((err) => {
-                    console.log('data not found', err);
-                });
 
+        }
+        catch (err) {
+            return next({
+                error: 'bad request',
+                message: err,
+                status: 400
+            });
+        }
+    }
+
+    async me(req, res, next) {
+        try {
+            res.send({
+                data: (req.user),
+            });
         }
         catch (err) {
             return next({
