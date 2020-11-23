@@ -3,7 +3,7 @@ import * as mongoose from 'mongoose';
 import { userModel } from './UserModel';
 import IUserModel from './IUserModel';
 import VersionableRepository from '../versionable/VersionableRepository';
-
+import * as bcrypt from 'bcrypt';
 
 export default class UserRepository extends VersionableRepository<IUserModel, mongoose.Model<IUserModel>> {
 
@@ -18,6 +18,7 @@ export default class UserRepository extends VersionableRepository<IUserModel, mo
     }
 
     public create(data: any): Promise<IUserModel> {
+
         return super.create(data);
     }
     public delete(id: string): Promise<IUserModel> {
@@ -30,8 +31,8 @@ export default class UserRepository extends VersionableRepository<IUserModel, mo
         return super.get(query, projection, options);
 
     }
-    public count(query: any) {
-        return super.count(query);
+    public count() {
+        return userModel.countDocuments();
     }
 
 }

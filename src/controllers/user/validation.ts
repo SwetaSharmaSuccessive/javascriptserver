@@ -1,7 +1,7 @@
 const config = {
     create: {
         id: {
-            required: true,
+            required: false,
             string: true,
             in: ['body'],
             custom(value) {
@@ -51,7 +51,7 @@ const config = {
         },
         dataToUpdate: {
             in: ['body'],
-            required: true,
+            required : false,
             isObject: true,
             custom(dataToUpdate) {
                 // NOTE: maybe used later
@@ -63,12 +63,14 @@ const config = {
         email: {
             required: true,
             string: true,
-            in: ['body']
+            in: ['body'],
+            errorMessage: 'Email is invalid',
         },
         password: {
             required: true,
             string: true,
-            in: ['body']
+            in: ['body'],
+            errorMessage: 'Password is invalid'
         }
     }
 };

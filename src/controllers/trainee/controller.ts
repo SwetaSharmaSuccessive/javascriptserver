@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import  configuration  from '../../config/configuration';
 import { payload } from '../../libs/routes/constant';
 import * as jwt from 'jsonwebtoken';
+import * as bcrypt from 'bcrypt';
 import TraineeRepository from '../../repositories/trainee/TraineeRepository';
 class TraineeController {
     private traineeRepository: TraineeRepository;
@@ -32,6 +33,11 @@ class TraineeController {
     }
     public create = async(req: Request, res: Response, next: NextFunction) => {
         try {
+            const rawPassword = req.body.password;
+            const saltRounds = 10;
+            const salt = bcrypt.genSaltSync(saltRounds);
+            const hashedPassword = bcrypt.hashSync(rawPassword, salt);
+            req.body.password = hashedPassword;
             const result = await this.traineeRepository.create(req.body);
             res.status(200).send({
                 message: 'Trainee created successfully',
@@ -44,6 +50,13 @@ class TraineeController {
     }
     public update = async(req: Request, res: Response, next: NextFunction) => {
         try {
+            const data = req.body;
+            if ('password' in data) {
+                const rawPassword = data.password;
+                const salt = bcrypt.genSaltSync(10);
+                const hashedPassword = bcrypt.hashSync(rawPassword, salt);
+                data.password = hashedPassword;
+            }
             const result = await this.traineeRepository.update(req.body);
             res.status(200).send({
                 message: 'Trainee updated successfully',
@@ -65,35 +78,54 @@ class TraineeController {
             console.log('error is ', err);
         }
     }
-    login(req: Request, res: Response, next: NextFunction) {
+    async login(req: Request, res: Response, next: NextFunction) {
         try {
             const secretKey = configuration.secret;
-            payload.email = req.body.email;
-            payload.password = req.body.password;
-            this.traineeRepository.findOne({ email: req.body.email, passsword: req.body.passsword })
-                .then((data) => {
-                    if (data === null) {
-                        next({
-                            message: 'Trainee not found',
-                            error: 'Unauthorized Access',
-                            status: 403
-                        });
-                    }
-                    else {
-                        const token = jwt.sign(payload, secretKey);
-                        res.status(200).send({
-                            message: 'token created successfully',
-                            data: {
-                                generated_token: token
-                            },
-                            status: 'success'
-                        });
-                    }
-                })
-                .catch((err) => {
-                    console.log('data not found', err);
+            const { email, password} = req.body;
+            payload.password = password;
+            payload.email = email;
+            const data = await TraineeRepository.findOne({ email});
+            if (!data) {
+                next({
+                    message: 'Email not Registered!',
+                    error: 'Unauthorized Access',
+                    status: 403
                 });
+            }
+            const matchPassword = await bcrypt.compareSync(payload.password, data.password);
+            if (matchPassword) {
+                const token = jwt.sign(payload, secretKey);
+                return res.status(200).send({
+                    message: 'token created successfully',
+                    data: {
+                        generated_token: token
+                    },
+                    status: 'success'
+                });
+            }
+            next({
+                error: 'token not found',
+                status: 400,
+                message: 'Error'
+            });
 
+        }
+
+        catch (err) {
+        return next({
+            error: 'bad request',
+            message: err,
+            status: 400
+        });
+    }
+}
+
+
+    async me(req, res, next) {
+        try {
+            res.send({
+                data: (req.user),
+            });
         }
         catch (err) {
             return next({
@@ -105,4 +137,5 @@ class TraineeController {
     }
 
 }
+
 export default TraineeController.getInstance();

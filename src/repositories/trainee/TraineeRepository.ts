@@ -1,4 +1,4 @@
-
+import * as bcrypt from 'bcrypt';
 import * as mongoose from 'mongoose';
 import { TraineeModel } from './TraineeModel';
 import ITraineeModel from './ITraineeModel';
