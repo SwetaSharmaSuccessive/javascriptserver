@@ -72,37 +72,40 @@ class UserController {
     async login(req: Request, res: Response, next: NextFunction) {
         try {
             const secretKey = configuration.secret;
-            console.log(secretKey);
-            payload.email = req.body.email;
-            console.log(payload.email);
-            const data = await UserRepository.findOne({ email: req.body.email});
-            console.log(data.password);
-            console.log(req.body.password);
-                    if (data === null) {
-                        next({
-                            message: 'Email not found',
-                            error: 'Unauthorized Access',
-                            status: 403
+            const { email, password} = req.body;
+            payload.password = password;
+            payload.email = email;
+            const data = await UserRepository.findOne({ email});
+            if (data === null) {
+                next({
+                    message: 'Email not Registered!',
+                    error: 'Unauthorized Access',
+                    status: 403
+                });
+            }
+            else {
+                if (email === data.email) {
+                    const matchPassword = await bcrypt.compareSync(payload.password, data.password);
+                    if (matchPassword) {
+                        const token = jwt.sign(payload, secretKey);
+                        res.status(200).send({
+                            message: 'token created successfully',
+                            data: {
+                                generated_token: token
+                            },
+                            status: 'success'
                         });
                     }
-                        const matchPassword = await bcrypt.compareSync(req.body.password, data.password);
-                        console.log(matchPassword);
-                        if (matchPassword) {
-                            const token = jwt.sign(payload, secretKey);
-                            res.status(200).send({
-                                message: 'token created successfully',
-                                data: {
-                                    generated_token: token
-                                },
-                                status: 'success'
-                            });
-                        }
-                        else {
+                    else {
+                        console.log('Password not matched');
                         next({
                             error: 'token not found',
-                            status: 400
+                            status: 400,
+                            message: 'Error'
                         });
                     }
+                }
+            }
 
         }
         catch (err) {

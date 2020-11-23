@@ -2,6 +2,7 @@ import * as jwt from 'jsonwebtoken';
 import hasPermissions from '../permissions';
 import configuration from '../../config/configuration';
 import UserRepository from '../../repositories/user/UserRepository';
+
 export default (module, permissionType) =>  async (req, res, next) => {
     const secretKey = configuration.secret;
     const head = 'authorization';
@@ -15,9 +16,9 @@ export default (module, permissionType) =>  async (req, res, next) => {
         });
     }
     try {
-        const user = jwt.verify(token, secretKey);
-        console.log('user: ', user);
-        dbUser =  await UserRepository.findOne({email: user.email});
+        const userData = jwt.verify(token, secretKey);
+        console.log('user: ', userData);
+        dbUser =  await UserRepository.findOne({email: userData.email});
         if (!dbUser) {
             return next({
                 error: 'Unauthorized',

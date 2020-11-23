@@ -69,19 +69,21 @@ class TraineeController {
     async login(req: Request, res: Response, next: NextFunction) {
         try {
             const secretKey = configuration.secret;
-            console.log(secretKey);
-            payload.email = req.body.email;
-            console.log(payload.email);
-            const data = await TraineeRepository.findOne({ email: req.body.email});
-                    if (data === null) {
-                        next({
-                            message: 'Email not found',
-                            error: 'Unauthorized Access',
-                            status: 403
-                        });
-                    }
-                    else {
-                        const matchPassword = bcrypt .compare(req.body.password, data.password);
+            const { email, password} = req.body;
+            payload.password = password;
+            payload.email = email;
+            const data = await TraineeRepository.findOne({ email});
+            if (data === null) {
+                next({
+                    message: 'Email not Registered!',
+                    error: 'Unauthorized Access',
+                    status: 403
+                });
+            }
+            else {
+                if (email === data.email) {
+                    const matchPassword = await bcrypt.compareSync(payload.password, data.password);
+                    if (matchPassword) {
                         const token = jwt.sign(payload, secretKey);
                         res.status(200).send({
                             message: 'token created successfully',
@@ -91,6 +93,16 @@ class TraineeController {
                             status: 'success'
                         });
                     }
+                    else {
+                        console.log('Password not matched');
+                        next({
+                            error: 'token not found',
+                            status: 400,
+                            message: 'Error'
+                        });
+                    }
+                }
+            }
 
         }
         catch (err) {

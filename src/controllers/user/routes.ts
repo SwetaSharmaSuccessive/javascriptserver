@@ -8,13 +8,7 @@ import authMiddleWare from '../../libs/routes/authMiddleWare';
 import config from './validation';
 
 const userRouter = Router();
-userRouter.route('/')
-    .get(authMiddleWare('getUsers', 'read'), validationHandler(config.get), userController.get)
-    .post(authMiddleWare('getUsers', 'write'), validationHandler(config.create), userController.create)
-    .put(authMiddleWare('getUsers', 'all'), validationHandler(config.update), userController.update)
-    .delete(authMiddleWare('getUsers', 'delete'), validationHandler(config.delete), userController.delete);
-    userRouter.route('/:id')
-    .delete(authMiddleWare('getUsers', 'delete'), validationHandler(config.delete), userController.delete);
+userRouter.route('/');
     userRouter.route('/me')
     .get(authMiddleWare ('getUsers', 'all'), validationHandler(config.get) , userController.me);
 
