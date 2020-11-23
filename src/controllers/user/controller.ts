@@ -95,24 +95,22 @@ class UserController {
                     status: 403
                 });
             }
-            else {
-                const matchPassword = await bcrypt.compareSync(payload.password, data.password);
-                if (matchPassword) {
-                    const token = jwt.sign(payload, secretKey);
-                    return res.status(200).send({
-                        message: 'token created successfully',
-                        data: {
-                            generated_token: token
-                        },
-                        status: 'success'
-                    });
-                }
-                next({
-                    error: 'token not created',
-                    status: 400,
-                    message: 'Error'
+            const matchPassword = await bcrypt.compareSync(payload.password, data.password);
+            if (matchPassword) {
+                const token = jwt.sign(payload, secretKey);
+                return res.status(200).send({
+                    message: 'token created successfully',
+                    data: {
+                        generated_token: token
+                    },
+                    status: 'success'
                 });
             }
+            next({
+                error: 'token not created',
+                status: 400,
+                message: 'Error'
+            });
         }
         catch (err) {
             return next({
