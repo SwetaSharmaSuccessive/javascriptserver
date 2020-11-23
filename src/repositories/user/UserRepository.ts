@@ -18,25 +18,13 @@ export default class UserRepository extends VersionableRepository<IUserModel, mo
     }
 
     public create(data: any): Promise<IUserModel> {
-        // const rawPassword = data.password;
-        // const saltRounds = 10;
-        // const salt = bcrypt.genSaltSync(saltRounds);
-        // const hashedPassword = bcrypt.hashSync(rawPassword, salt);
-        // data.password = hashedPassword;
-        // console.log('data password: ', data.password);
+
         return super.create(data);
     }
     public delete(id: string): Promise<IUserModel> {
         return super.delete(id);
     }
     public update(data: any): Promise<IUserModel> {
-        if ('password' in data) {
-            const rawPassword = data.password;
-            const saltRounds = 10;
-            const salt = bcrypt.genSaltSync(saltRounds);
-            const hashedPassword = bcrypt.hashSync(rawPassword, salt);
-            data.password = hashedPassword;
-        }
         return super.update(data);
     }
     public async get(query: any, projection: any, options: any): Promise<IUserModel[]> {
