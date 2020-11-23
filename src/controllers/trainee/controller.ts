@@ -33,6 +33,11 @@ class TraineeController {
     }
     public create = async(req: Request, res: Response, next: NextFunction) => {
         try {
+            const rawPassword = req.body.password;
+            const saltRounds = 10;
+            const salt = bcrypt.genSaltSync(saltRounds);
+            const hashedPassword = bcrypt.hashSync(rawPassword, salt);
+            req.body.password = hashedPassword;
             const result = await this.traineeRepository.create(req.body);
             res.status(200).send({
                 message: 'Trainee created successfully',
@@ -45,6 +50,13 @@ class TraineeController {
     }
     public update = async(req: Request, res: Response, next: NextFunction) => {
         try {
+            const data = req.body;
+            if ('password' in data) {
+                const rawPassword = data.password;
+                const salt = bcrypt.genSaltSync(10);
+                const hashedPassword = bcrypt.hashSync(rawPassword, salt);
+                data.password = hashedPassword;
+            }
             const result = await this.traineeRepository.update(req.body);
             res.status(200).send({
                 message: 'Trainee updated successfully',
@@ -73,7 +85,7 @@ class TraineeController {
             payload.password = password;
             payload.email = email;
             const data = await TraineeRepository.findOne({ email});
-            if (data === null) {
+            if (!data) {
                 next({
                     message: 'Email not Registered!',
                     error: 'Unauthorized Access',
@@ -81,38 +93,34 @@ class TraineeController {
                 });
             }
             else {
-                if (email === data.email) {
-                    const matchPassword = await bcrypt.compareSync(payload.password, data.password);
-                    if (matchPassword) {
-                        const token = jwt.sign(payload, secretKey);
-                        res.status(200).send({
-                            message: 'token created successfully',
-                            data: {
-                                generated_token: token
-                            },
-                            status: 'success'
-                        });
-                    }
-                    else {
-                        console.log('Password not matched');
-                        next({
-                            error: 'token not found',
-                            status: 400,
-                            message: 'Error'
-                        });
-                    }
+                const matchPassword = await bcrypt.compareSync(payload.password, data.password);
+                if (matchPassword) {
+                    const token = jwt.sign(payload, secretKey);
+                    return res.status(200).send({
+                        message: 'token created successfully',
+                        data: {
+                            generated_token: token
+                        },
+                        status: 'success'
+                    });
                 }
+                next({
+                    error: 'token not found',
+                    status: 400,
+                    message: 'Error'
+                });
             }
-
-        }
-        catch (err) {
-            return next({
-                error: 'bad request',
-                message: err,
-                status: 400
-            });
-        }
     }
+
+    catch (err) {
+        return next({
+            error: 'bad request',
+            message: err,
+            status: 400
+        });
+    }
+}
+
 
     async me(req, res, next) {
         try {
@@ -130,4 +138,5 @@ class TraineeController {
     }
 
 }
+
 export default TraineeController.getInstance();
