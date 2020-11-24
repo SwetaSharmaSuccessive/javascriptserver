@@ -10,7 +10,7 @@ import config from './validation';
 const userRouter = Router();
 userRouter.route('/');
     userRouter.route('/me')
-    .get(authMiddleWare ('getUsers', 'all'), validationHandler(config.get) , userController.me);
+    .get(authMiddleWare ('getUsers', 'read'), validationHandler(config.get) , userController.me);
 
     userRouter.route('/login')
     .post( validationHandler ( config.login ), userController.login );

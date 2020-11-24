@@ -23,6 +23,7 @@ export default class TraineeRepository extends VersionableRepository<ITraineeMod
         return super.delete(id);
     }
     public update(data: any): Promise<ITraineeModel> {
+
         return super.update(data);
     }
     public async get(query: any, projection: any, options: any): Promise<ITraineeModel[]> {

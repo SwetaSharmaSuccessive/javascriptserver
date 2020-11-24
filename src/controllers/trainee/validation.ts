@@ -29,14 +29,14 @@ const config = {
     },
     get: {
         skip: {
-            required: false,
+            required: true,
             default: 0,
             number: true,
             in: ['query'],
             errorMessage: 'Skip is invalid',
         },
         limit: {
-            required: false,
+            required: true,
             default: 10,
             number: true,
             in: ['query'],

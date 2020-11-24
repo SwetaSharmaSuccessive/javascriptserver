@@ -5,6 +5,7 @@ import { payload } from '../../libs/routes/constant';
 import UserRepository from '../../repositories/user/UserRepository';
 import * as bcrypt from 'bcrypt';
 
+
 class UserController {
     static instance: UserController;
     static getInstance() {
@@ -21,10 +22,18 @@ class UserController {
     }
     public get =  async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const extractedData = await this.userRepository.get(req.body, {}, {});
+            // const {skip, limit } = res.locals;
+            // const sort = req.query.sort;
+            // const totalCount = await this.userRepository.count(req.body);
+            const extractedData = await this.userRepository.get(req.body , {}, {});
+            // const userCount = extractedData.length;
             res.status(200).send({
                 message: 'User fetched successfully',
-                data: extractedData,
+                data: {
+                    // total: totalCount,
+                    // show: userCount,
+                    extractedData
+                },
                 status: 'success',
             });
         } catch (err) {
@@ -38,6 +47,7 @@ class UserController {
             const salt = bcrypt.genSaltSync(saltRounds);
             const hashedPassword = bcrypt.hashSync(rawPassword, salt);
             req.body.password = hashedPassword;
+
             const result = await this.userRepository.create(req.body);
             res.status(200).send({
                 message: 'User created successfully',
@@ -56,6 +66,7 @@ class UserController {
                 const salt = bcrypt.genSaltSync(10);
                 const hashedPassword = bcrypt.hashSync(rawPassword, salt);
                 data.password = hashedPassword;
+
             }
             const result = await this.userRepository.update(req.body);
             res.status(200).send({
@@ -97,7 +108,7 @@ class UserController {
             }
             const matchPassword = await bcrypt.compareSync(payload.password, data.password);
             if (matchPassword) {
-                const token = jwt.sign(payload, secretKey);
+                const token = jwt.sign(payload, secretKey, {expiresIn: '15m'});
                 return res.status(200).send({
                     message: 'token created successfully',
                     data: {
@@ -110,7 +121,7 @@ class UserController {
                 error: 'token not created',
                 status: 400,
                 message: 'Error'
-            });
+                });
         }
         catch (err) {
             return next({
