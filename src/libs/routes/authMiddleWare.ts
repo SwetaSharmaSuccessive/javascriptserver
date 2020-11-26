@@ -38,7 +38,7 @@ export default (module, permissionType) =>  async (req, res, next) => {
     } catch (err) {
         next({
             message: 'User is unauthorized',
-            error: 'Unauthorized Access Sweta',
+            error: 'Unauthorized Access',
             status: 403
         });
     }

@@ -25,15 +25,14 @@ class TraineeController {
             const extractedData = await this.traineeRepository.get(req.body, {}, {
                 limit : Number(limit),
                 skip : Number(skip),
-                sort: {[String(sort)]: -1},
-                collation: ({locale: 'en'})
+                sort: {[String(sort)]: -1}
             });
-            const totalCount = await this.traineeRepository.count(req.body);
-            const   countUser = extractedData.length;
+            const totalCount = await this.traineeRepository.count();
+            const countUser = extractedData.length;
             res.status(200).send({
                 message: 'Trainee fetched successfully',
-                totalCount: await this.traineeRepository.count(req.body),
-                count: extractedData.length,
+                TotalCount: totalCount,
+                CountUser: countUser,
                 data: extractedData,
                 status: 'success',
             });
@@ -129,7 +128,7 @@ class TraineeController {
             });
         }
     }
-    async me(req, res, next) {
+    async me(req: Request, res: Response, next: NextFunction) {
         try {
             res.send({
                 data: (req.user),

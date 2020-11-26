@@ -28,7 +28,7 @@ class Server {
         app.use(notFoundHandler);
         app.use(errorHandler);
     }
-   
+
 
     public run() {
         const { port, mongo_url } = this.config;
