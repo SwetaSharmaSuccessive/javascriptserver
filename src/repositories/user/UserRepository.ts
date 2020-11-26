@@ -1,4 +1,3 @@
-
 import * as mongoose from 'mongoose';
 import { userModel } from './UserModel';
 import IUserModel from './IUserModel';
@@ -31,7 +30,7 @@ export default class UserRepository extends VersionableRepository<IUserModel, mo
         return super.get(query, projection, options);
 
     }
-    public count() {
+    public countData() {
         return userModel.countDocuments();
     }
 

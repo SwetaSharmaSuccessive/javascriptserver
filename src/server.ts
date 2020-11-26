@@ -14,6 +14,11 @@ class Server {
         this.setupRoutes();
         return this.app;
     }
+    public initBodyParser() {
+        const { app } = this;
+        app.use(bodyparser.json());
+        app.use(bodyparser.urlencoded({ extended: false }));
+    }
     public setupRoutes() {
         const { app } = this;
         app.use('/health-check', (req, res, next) => {
@@ -23,11 +28,7 @@ class Server {
         app.use(notFoundHandler);
         app.use(errorHandler);
     }
-    public initBodyParser() {
-        const { app } = this;
-        app.use(bodyparser.json());
-        app.use(bodyparser.urlencoded({ extended: false }));
-    }
+   
 
     public run() {
         const { port, mongo_url } = this.config;

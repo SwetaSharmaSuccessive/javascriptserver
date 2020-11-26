@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import configuration from '../../config/configuration';
+import  configuration  from '../../config/configuration';
 import { payload } from '../../libs/routes/constant';
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
@@ -8,6 +8,7 @@ class TraineeController {
     private traineeRepository: TraineeRepository;
     constructor() {
         this.traineeRepository = new TraineeRepository();
+
     }
     static instance: TraineeController;
     static getInstance() {
@@ -18,54 +19,30 @@ class TraineeController {
         return TraineeController.instance;
     }
 
-    public get = async (req: Request, res: Response, next: NextFunction) => {
+    public get =  async (req: Request, res: Response, next: NextFunction) => {
         try {
-            // const { skip, limit } = res.locals;
-            // const sort = req.query.sort;
-            // const totalCount = await this.traineeRepository.count(req.body);
-
-            const extractedData = await this.traineeRepository.get(req.body, {}, {});
-            // const userCount = extractedData.length;
+            const {skip, limit, sort } = req.query;
+            const extractedData = await this.traineeRepository.get(req.body, {}, {
+                limit : Number(limit),
+                skip : Number(skip),
+                sort: {[String(sort)]: -1},
+                collation: ({locale: 'en'})
+            });
+            const totalCount = await this.traineeRepository.count(req.body);
+            const   countUser = extractedData.length;
             res.status(200).send({
                 message: 'Trainee fetched successfully',
-                data: {
-                    // total: totalCount,
-                    // show: userCount,
-                    extractedData
-                },
+                totalCount: await this.traineeRepository.count(req.body),
+                count: extractedData.length,
+                data: extractedData,
                 status: 'success',
             });
         } catch (err) {
             console.log('error is ', err);
         }
+
     }
-    public async getAll(req: Request, res: Response, next: NextFunction) {
-        try {
-
-            const {skip, limit, sort } = req.query;
-            console.log('inside get uper');
-
-            const extractedData = await this.traineeRepository.get({}, {},
-                {
-                    limit : Number(limit),
-                    skip : Number(skip),
-                    sort: {[String(sort)]: -1},
-                    collation: ({locale: 'en'})
-                });
-            console.log('inside getall');
-
-            res.status(200).send({
-                message: 'trainee fetched successfully',
-                totalCount: await this.traineeRepository.count(req.body),
-                count: extractedData.length,
-                data: [extractedData],
-                status: 'success',
-            });
-        } catch (err) {
-            console.log('error: ', err);
-        }
-    }
-    public create = async (req: Request, res: Response, next: NextFunction) => {
+    public create = async(req: Request, res: Response, next: NextFunction) => {
         try {
             const rawPassword = req.body.password;
             const saltRounds = 10;
@@ -82,14 +59,14 @@ class TraineeController {
             console.log('error is ', err);
         }
     }
-    public update = async (req: Request, res: Response, next: NextFunction) => {
+    public update = async(req: Request, res: Response, next: NextFunction) => {
         try {
-             const data = req.body;
+            const data = req.body;
             if ('password' in data) {
                 const rawPassword = data.password;
                 const salt = bcrypt.genSaltSync(10);
                 const hashedPassword = bcrypt.hashSync(rawPassword, salt);
-                data.password = hashedPassword; data.password = hashedPassword();
+                data.password = hashedPassword;
             }
             const result = await this.traineeRepository.update(req.body);
             res.status(200).send({
@@ -100,9 +77,9 @@ class TraineeController {
             console.log('error is ', err);
         }
     }
-    public delete = async (req: Request, res: Response, next: NextFunction) => {
+    public delete = async(req: Request, res: Response, next: NextFunction) => {
         try {
-            const result = await this.traineeRepository.delete(req.params.id);
+            const result =   await this.traineeRepository.delete(req.params.id);
             res.status(200).send({
                 message: 'Trainee deleted successfully',
                 data: {},
@@ -115,10 +92,10 @@ class TraineeController {
     async login(req: Request, res: Response, next: NextFunction) {
         try {
             const secretKey = configuration.secret;
-            const { email, password } = req.body;
+            const { email, password} = req.body;
             payload.password = password;
             payload.email = email;
-            const data = await TraineeRepository.findOne({ email });
+            const data = await TraineeRepository.findOne({ email});
             if (!data) {
                 next({
                     message: 'Email not Registered!',
@@ -128,7 +105,7 @@ class TraineeController {
             }
             const matchPassword = await bcrypt.compareSync(payload.password, data.password);
             if (matchPassword) {
-                const token = jwt.sign(payload, secretKey, {expiresIn: '15m'});
+                const token = jwt.sign(payload, secretKey, {expiresIn: '900s'});
                 return res.status(200).send({
                     message: 'token created successfully',
                     data: {
@@ -144,7 +121,6 @@ class TraineeController {
             });
 
         }
-
         catch (err) {
             return next({
                 error: 'bad request',
@@ -153,8 +129,6 @@ class TraineeController {
             });
         }
     }
-
-
     async me(req, res, next) {
         try {
             res.send({

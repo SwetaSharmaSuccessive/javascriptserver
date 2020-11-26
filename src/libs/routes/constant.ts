@@ -38,8 +38,6 @@ export const users: IUsers[] = [
 
 export const payload = {
     'iss': 'successive technologies',
-    'iat': 1604767536,
-    'aud': 'peers',
     'sub': 'profile setup',
     'email': undefined,
     'password': undefined

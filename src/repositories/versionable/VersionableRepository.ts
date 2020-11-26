@@ -1,4 +1,3 @@
-
 import * as mongoose from 'mongoose';
 import { DocumentQuery, Query } from 'mongoose';
 import IUserModel from '../user/IUserModel';
@@ -35,7 +34,6 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
         const finalQuery = { deletedAt: undefined, ...query };
         return await this.model.find(finalQuery, projection, options);
     }
-
     public async invalidateUpdate(id: string): Promise<D> {
         const query: any = { originalId: id, deletedAt: { $exists: false }, updatedAt: { $exists: false } };
         const data: any = { deletedAt: Date.now(), updatedAt: Date.now() };
