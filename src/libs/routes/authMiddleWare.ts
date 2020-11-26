@@ -16,9 +16,9 @@ export default (module, permissionType) =>  async (req, res, next) => {
         });
     }
     try {
-        const userData = jwt.verify(token, secretKey);
-        console.log('user: ', userData);
-        dbUser =  await UserRepository.findOne({email: userData.email});
+         const user = jwt.verify(token, secretKey);
+         console.log('user', user);
+        dbUser =  await UserRepository.findOne({email: user.email});
         if (!dbUser) {
             return next({
                 error: 'Unauthorized',
@@ -42,5 +42,4 @@ export default (module, permissionType) =>  async (req, res, next) => {
             status: 403
         });
     }
-
 };

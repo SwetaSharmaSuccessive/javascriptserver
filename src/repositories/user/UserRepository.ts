@@ -1,4 +1,3 @@
-
 import * as mongoose from 'mongoose';
 import { userModel } from './UserModel';
 import IUserModel from './IUserModel';

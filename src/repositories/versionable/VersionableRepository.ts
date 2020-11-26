@@ -1,4 +1,3 @@
-
 import * as mongoose from 'mongoose';
 import { DocumentQuery, Query } from 'mongoose';
 import IUserModel from '../user/IUserModel';

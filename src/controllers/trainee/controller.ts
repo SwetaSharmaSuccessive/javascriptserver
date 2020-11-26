@@ -21,15 +21,25 @@ class TraineeController {
 
     public get =  async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const extractedData = await this.traineeRepository.get(req.body, {}, {});
+            const {skip, limit, sort } = req.query;
+            const extractedData = await this.traineeRepository.get(req.body, {}, {
+                limit : Number(limit),
+                skip : Number(skip),
+                sort: {[String(sort)]: -1}
+            });
+            const totalCount = await this.traineeRepository.count(req.body);
+            const countUser = extractedData.length;
             res.status(200).send({
                 message: 'Trainee fetched successfully',
+                TotalCount: totalCount,
+                CountUser: countUser,
                 data: extractedData,
                 status: 'success',
             });
         } catch (err) {
             console.log('error is ', err);
         }
+
     }
     public create = async(req: Request, res: Response, next: NextFunction) => {
         try {
@@ -94,7 +104,7 @@ class TraineeController {
             }
             const matchPassword = await bcrypt.compareSync(payload.password, data.password);
             if (matchPassword) {
-                const token = jwt.sign(payload, secretKey);
+                const token = jwt.sign(payload, secretKey, {expiresIn: '15m'});
                 return res.status(200).send({
                     message: 'token created successfully',
                     data: {
@@ -110,18 +120,15 @@ class TraineeController {
             });
 
         }
-
         catch (err) {
-        return next({
-            error: 'bad request',
-            message: err,
-            status: 400
-        });
+            return next({
+                error: 'bad request',
+                message: err,
+                status: 400
+            });
+        }
     }
-}
-
-
-    async me(req, res, next) {
+    async me(req: Request, res: Response, next: NextFunction) {
         try {
             res.send({
                 data: (req.user),

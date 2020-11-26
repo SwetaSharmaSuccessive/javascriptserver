@@ -21,9 +21,18 @@ class UserController {
     }
     public get =  async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const extractedData = await this.userRepository.get(req.body, {}, {});
+            const {skip, limit, sort } = req.query;
+            const extractedData = await this.userRepository.get(req.body, {}, {
+                limit : Number(limit),
+                skip : Number(skip),
+                sort: {[String(sort)]: 1}
+            });
+            const totalCount = await this.userRepository.count();
+            const  countUser = extractedData.length;
             res.status(200).send({
-                message: 'User fetched successfully',
+                message: 'Trainee fetched successfully',
+                TotalCount: totalCount,
+                CountUser: countUser,
                 data: extractedData,
                 status: 'success',
             });
@@ -97,7 +106,7 @@ class UserController {
             }
             const matchPassword = await bcrypt.compareSync(payload.password, data.password);
             if (matchPassword) {
-                const token = jwt.sign(payload, secretKey);
+                const token = jwt.sign(payload, secretKey, {expiresIn : '15m'});
                 return res.status(200).send({
                     message: 'token created successfully',
                     data: {
@@ -121,7 +130,7 @@ class UserController {
         }
     }
 
-    async me(req, res, next) {
+     me(req: Request, res: Response, next: NextFunction) {
         try {
             res.send({
                 data: (req.user),
