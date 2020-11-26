@@ -27,7 +27,7 @@ class TraineeController {
                 skip : Number(skip),
                 sort: {[String(sort)]: -1}
             });
-            const totalCount = await this.traineeRepository.count();
+            const totalCount = await this.traineeRepository.count(req.body);
             const countUser = extractedData.length;
             res.status(200).send({
                 message: 'Trainee fetched successfully',
