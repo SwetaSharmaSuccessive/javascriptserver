@@ -21,7 +21,29 @@ class TraineeController {
 
     public get =  async (req: Request, res: Response, next: NextFunction) => {
         try {
+            function escapeRegExp(text) {
+                return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+            }
             const {skip, limit, sort } = req.query;
+            if (req.query.search !== undefined) {
+                const regex = new RegExp(escapeRegExp(req.query.search), 'gi');
+                const extractedData = await this.traineeRepository.get({email: regex} || {name: regex}, {},
+                    {
+                        limit : Number(limit),
+                        skip : Number(skip),
+                        sort: {[String(sort)]: 1},
+                        collation: ({locale: 'en'})
+                    });
+
+                    res.status(200).send({
+                        message: 'trainee fetched successfully',
+                        totalCount: await this.traineeRepository.count(req.body),
+                        count: extractedData.length,
+                        data: [extractedData],
+                        status: 'success',
+                    });
+                }
+                else {
             const extractedData = await this.traineeRepository.get(req.body, {}, {
                 limit : Number(limit),
                 skip : Number(skip),
@@ -36,6 +58,7 @@ class TraineeController {
                 data: extractedData,
                 status: 'success',
             });
+        }
         } catch (err) {
             console.log('error is ', err);
         }
@@ -106,11 +129,11 @@ class TraineeController {
             if (matchPassword) {
                 const token = jwt.sign(payload, secretKey, {expiresIn: '15m'});
                 return res.status(200).send({
-                    message: 'token created successfully',
+                    message: 'Authorization Token',
                     data: {
                         generated_token: token
                     },
-                    status: 'success'
+                    status: 'OK'
                 });
             }
             next({

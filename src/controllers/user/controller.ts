@@ -5,6 +5,7 @@ import { payload } from '../../libs/routes/constant';
 import UserRepository from '../../repositories/user/UserRepository';
 import * as bcrypt from 'bcrypt';
 
+
 class UserController {
     static instance: UserController;
     static getInstance() {
@@ -21,21 +22,45 @@ class UserController {
     }
     public get =  async (req: Request, res: Response, next: NextFunction) => {
         try {
+            function escapeRegExp(text) {
+                return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+            }
             const {skip, limit, sort } = req.query;
-            const extractedData = await this.userRepository.get(req.body, {}, {
-                limit : Number(limit),
-                skip : Number(skip),
-                sort: {[String(sort)]: 1}
-            });
-            const totalCount = await this.userRepository.count();
-            const  countUser = extractedData.length;
-            res.status(200).send({
-                message: 'Trainee fetched successfully',
-                TotalCount: totalCount,
-                CountUser: countUser,
-                data: extractedData,
-                status: 'success',
-            });
+            if (req.query.search !== undefined) {
+                const regex = new RegExp(escapeRegExp(req.query.search), 'gi');
+                const extractedData = await this.userRepository.get({email: regex} || {name: regex}, {},
+                    {
+                        limit : Number(limit),
+                        skip : Number(skip),
+                        sort: {[String(sort)]: 1},
+                        collation: ({locale: 'en'})
+                    });
+                    const totalCount = await this.userRepository.get({}, {}, {});
+                    res.status(200).send({
+                        message: 'trainee fetched successfully',
+                        totalCount: totalCount.length,
+                        count: extractedData.length,
+                        data: extractedData,
+                        status: 'success',
+                    });
+            }
+            else {
+             // const {skip, limit, sort } = req.query;
+                const extractedData = await this.userRepository.get(req.body, {}, {
+                    limit : Number(limit),
+                    skip : Number(skip),
+                    sort: {[String(sort)]: 1}
+                });
+                const totalCount = await this.userRepository.get({}, {}, {});
+                const  countUser = extractedData.length;
+                res.status(200).send({
+                    message: 'Trainee fetched successfully',
+                    TotalCount: totalCount.length,
+                    CountUser: countUser,
+                    data: extractedData,
+                    status: 'success',
+                });
+            }
         } catch (err) {
             console.log('error is ', err);
         }
@@ -108,11 +133,11 @@ class UserController {
             if (matchPassword) {
                 const token = jwt.sign(payload, secretKey, {expiresIn : '15m'});
                 return res.status(200).send({
-                    message: 'token created successfully',
+                    message: 'Authorization Token',
                     data: {
                         generated_token: token
                     },
-                    status: 'success'
+                    status: 'OK'
                 });
             }
             next({

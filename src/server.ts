@@ -3,7 +3,10 @@ import { IConfig } from './config/IConfig';
 import * as bodyparser from 'body-parser';
 import { notFoundHandler, errorHandler } from './libs/routes';
 import routes from './router';
+import * as swaggerUI from 'swagger-ui-express';
 import Database from './libs/database';
+// import { swagger from './swagger';
+import swaggerOptions from './swagger';
 class Server {
     private app: any;
     constructor(private config: IConfig) {
@@ -19,8 +22,10 @@ class Server {
         app.use(bodyparser.json());
         app.use(bodyparser.urlencoded({ extended: false }));
     }
+
     public setupRoutes() {
         const { app } = this;
+        app.use('/swagger', swaggerUI.serve, swaggerUI.setup(swaggerOptions));
         app.use('/health-check', (req, res, next) => {
             res.send('I am Ok');
         });
