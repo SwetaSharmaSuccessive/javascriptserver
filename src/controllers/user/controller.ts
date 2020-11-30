@@ -45,7 +45,6 @@ class UserController {
                     });
             }
             else {
-             // const {skip, limit, sort } = req.query;
                 const extractedData = await this.userRepository.get(req.body, {}, {
                     limit : Number(limit),
                     skip : Number(skip),

@@ -5,7 +5,6 @@ import { notFoundHandler, errorHandler } from './libs/routes';
 import routes from './router';
 import * as swaggerUI from 'swagger-ui-express';
 import Database from './libs/database';
-// import { swagger from './swagger';
 import swaggerOptions from './swagger';
 class Server {
     private app: any;
