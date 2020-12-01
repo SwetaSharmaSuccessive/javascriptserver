@@ -13,6 +13,7 @@ export default class TraineeRepository extends VersionableRepository<ITraineeMod
         super(TraineeModel);
     }
     public static findOne(query): mongoose.DocumentQuery<ITraineeModel, ITraineeModel, {}> {
+        const finalQuery = { deletedAt: undefined, ...query };
         return TraineeModel.findOne(query).lean();
     }
 

@@ -86,11 +86,6 @@ traineeRouter.route('/')
  *         in: query
  *         required: false
  *         type: string
- *       - name: sort
- *         description: Elements to sort By(sorting order)
- *         in: query
- *         required: false
- *         type: string
  *       - name: search
  *         description: Element to search
  *         in: query

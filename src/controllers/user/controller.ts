@@ -48,7 +48,8 @@ class UserController {
                 const extractedData = await this.userRepository.get(req.body, {}, {
                     limit : Number(limit),
                     skip : Number(skip),
-                    sort: {[String(sort)]: 1}
+                    sort: {[String(sort)]: 1},
+                    collation: ({locale: 'en'})
                 });
                 const totalCount = await this.userRepository.get({}, {}, {});
                 const  countUser = extractedData.length;
