@@ -32,7 +32,7 @@ class UserController {
                     {
                         limit : Number(limit),
                         skip : Number(skip),
-                        sort: {[String(sort)]: 1},
+                        sort: {[String(sort)]: req.query.sortedBy},
                         collation: ({locale: 'en'})
                     });
                     const totalCount = await this.userRepository.get({}, {}, {});
@@ -48,7 +48,7 @@ class UserController {
                 const extractedData = await this.userRepository.get(req.body, {}, {
                     limit : Number(limit),
                     skip : Number(skip),
-                    sort: {[String(sort)]: 1},
+                    sort: {[String(sort)]: req.query.sortedBy},
                     collation: ({locale: 'en'})
                 });
                 const totalCount = await this.userRepository.get({}, {}, {});
