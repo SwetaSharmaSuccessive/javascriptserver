@@ -31,7 +31,7 @@ class TraineeController {
                     {
                         limit : Number(limit),
                         skip : Number(skip),
-                        sort: {[String(sort)]: 1},
+                        sort: {[String(sort)]:  req.query.sortedBy},
                         collation: ({locale: 'en'})
                     });
                     const totalCount = await this.traineeRepository.count(req.body);
@@ -48,7 +48,7 @@ class TraineeController {
             const extractedData = await this.traineeRepository.get(req.body, {}, {
                 limit : Number(limit),
                 skip : Number(skip),
-                sort: {[String(sort)]: 1},
+                sort: {[String(sort)]:  req.query.sortedBy},
                 collation: ({locale: 'en'})
             });
             const totalCount = await this.traineeRepository.count(req.body);
