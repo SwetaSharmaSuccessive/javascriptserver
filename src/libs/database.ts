@@ -12,7 +12,7 @@ class Database {
                     return reject(err);
                 }
             seed();
-            resolve();
+            resolve(undefined);
         });
 
     });

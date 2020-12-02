@@ -4,6 +4,8 @@ import  configuration  from '../../config/configuration';
 import { payload } from '../../libs/routes/constant';
 import UserRepository from '../../repositories/user/UserRepository';
 import * as bcrypt from 'bcrypt';
+import IRequest from '../../libs/routes/IRequest';
+import IType from '../IType';
 
 
 class UserController {
@@ -28,7 +30,7 @@ class UserController {
             const {skip, limit, sort } = req.query;
             if (req.query.search !== undefined) {
                 const regex = new RegExp(escapeRegExp(req.query.search), 'gi');
-                const extractedData = await this.userRepository.get({email: regex} || {name: regex}, {},
+                const extractedData: IType[] = await this.userRepository.get({email: regex} || {name: regex}, {},
                     {
                         limit : Number(limit),
                         skip : Number(skip),
@@ -45,7 +47,7 @@ class UserController {
                     });
             }
             else {
-                const extractedData = await this.userRepository.get(req.body, {}, {
+                const extractedData: IType[] = await this.userRepository.get(req.body, {}, {
                     limit : Number(limit),
                     skip : Number(skip),
                     sort: {[String(sort)]: req.query.sortedBy},
@@ -121,15 +123,15 @@ class UserController {
             const { email, password} = req.body;
             payload.password = password;
             payload.email = email;
-            const data = await UserRepository.findOne({ email});
-            if (!data) {
+            const result = await UserRepository.findOne({ email});
+            if (!result) {
                 next({
                     message: 'Email not Registered!',
                     error: 'Unauthorized Access',
                     status: 403
                 });
             }
-            const matchPassword = await bcrypt.compareSync(payload.password, data.password);
+            const matchPassword = await bcrypt.compareSync(payload.password, result.password);
             if (matchPassword) {
                 const token = jwt.sign(payload, secretKey, {expiresIn : '15m'});
                 return res.status(200).send({
@@ -141,21 +143,21 @@ class UserController {
                 });
             }
             next({
-                error: 'token not created',
+                error: 'Token Not Created',
                 status: 400,
                 message: 'Error'
             });
         }
         catch (err) {
             return next({
-                error: 'bad request',
+                error: 'Bad Request',
                 message: err,
                 status: 400
             });
         }
     }
 
-     me(req: Request, res: Response, next: NextFunction) {
+     me(req: IRequest, res: Response, next: NextFunction) {
         try {
             res.send({
                 data: (req.user),
@@ -163,7 +165,7 @@ class UserController {
         }
         catch (err) {
             return next({
-                error: 'bad request',
+                error: 'Bad Request',
                 message: err,
                 status: 400
             });

@@ -4,6 +4,9 @@ import { payload } from '../../libs/routes/constant';
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
 import TraineeRepository from '../../repositories/trainee/TraineeRepository';
+import IRequest from '../../libs/routes/IRequest';
+import IType from '../IType';
+
 class TraineeController {
     private traineeRepository: TraineeRepository;
     constructor() {
@@ -27,7 +30,7 @@ class TraineeController {
             const {skip, limit, sort } = req.query;
             if (req.query.search !== undefined) {
                 const regex = new RegExp(escapeRegExp(req.query.search), 'gi');
-                const extractedData = await this.traineeRepository.get({email: regex} || {name: regex}, {},
+                const extractedData: IType[] = await this.traineeRepository.get({email: regex} || {name: regex}, {},
                     {
                         limit : Number(limit),
                         skip : Number(skip),
@@ -45,7 +48,7 @@ class TraineeController {
                     });
                 }
                 else {
-            const extractedData = await this.traineeRepository.get(req.body, {}, {
+            const extractedData: IType[] = await this.traineeRepository.get(req.body, {}, {
                 limit : Number(limit),
                 skip : Number(skip),
                 sort: {[String(sort)]:  req.query.sortedBy},
@@ -153,7 +156,7 @@ class TraineeController {
             });
         }
     }
-    async me(req: Request, res: Response, next: NextFunction) {
+    async me(req: IRequest, res: Response, next: NextFunction) {
         try {
             res.send({
                 data: (req.user),
