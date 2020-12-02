@@ -21,21 +21,46 @@ class TraineeController {
 
     public get =  async (req: Request, res: Response, next: NextFunction) => {
         try {
+            function escapeRegExp(text) {
+                return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+            }
             const {skip, limit, sort } = req.query;
+            if (req.query.search !== undefined) {
+                const regex = new RegExp(escapeRegExp(req.query.search), 'gi');
+                const extractedData = await this.traineeRepository.get({email: regex} || {name: regex}, {},
+                    {
+                        limit : Number(limit),
+                        skip : Number(skip),
+                        sort: {[String(sort)]:  req.query.sortedBy},
+                        collation: ({locale: 'en'})
+                    });
+                    const totalCount = await this.traineeRepository.count(req.body);
+                    const countUser = extractedData.length;
+                    res.status(200).send({
+                        message: 'trainee fetched successfully',
+                        TotalCount: totalCount,
+                        CountUser: countUser,
+                        data: extractedData,
+                        status: 'success',
+                    });
+                }
+                else {
             const extractedData = await this.traineeRepository.get(req.body, {}, {
                 limit : Number(limit),
                 skip : Number(skip),
-                sort: {[String(sort)]: -1}
+                sort: {[String(sort)]:  req.query.sortedBy},
+                collation: ({locale: 'en'})
             });
             const totalCount = await this.traineeRepository.count(req.body);
             const countUser = extractedData.length;
             res.status(200).send({
-                message: 'Trainee fetched successfully',
+                message: 'Trainee Fetched Successfully',
                 TotalCount: totalCount,
                 CountUser: countUser,
                 data: extractedData,
                 status: 'success',
             });
+        }
         } catch (err) {
             console.log('error is ', err);
         }
@@ -50,7 +75,7 @@ class TraineeController {
             req.body.password = hashedPassword;
             const result = await this.traineeRepository.create(req.body);
             res.status(200).send({
-                message: 'Trainee created successfully',
+                message: 'Trainee Created Successfully',
                 data: result,
                 status: 'success',
             });
@@ -69,7 +94,7 @@ class TraineeController {
             }
             const result = await this.traineeRepository.update(req.body);
             res.status(200).send({
-                message: 'Trainee updated successfully',
+                message: 'Trainee Updated Successfully',
                 data: result
             });
         } catch (err) {
@@ -80,7 +105,7 @@ class TraineeController {
         try {
             const result =   await this.traineeRepository.delete(req.params.id);
             res.status(200).send({
-                message: 'Trainee deleted successfully',
+                message: 'Trainee Deleted Successfully',
                 data: {},
                 status: 'success',
             });
@@ -94,27 +119,27 @@ class TraineeController {
             const { email, password} = req.body;
             payload.password = password;
             payload.email = email;
-            const data = await TraineeRepository.findOne({ email});
-            if (!data) {
+            const result = await TraineeRepository.findOne({ email});
+            if (!result) {
                 next({
                     message: 'Email not Registered!',
                     error: 'Unauthorized Access',
                     status: 403
                 });
             }
-            const matchPassword = await bcrypt.compareSync(payload.password, data.password);
+            const matchPassword = await bcrypt.compareSync(payload.password, result.password);
             if (matchPassword) {
                 const token = jwt.sign(payload, secretKey, {expiresIn: '15m'});
                 return res.status(200).send({
-                    message: 'token created successfully',
+                    message: 'Authorization Token',
                     data: {
                         generated_token: token
                     },
-                    status: 'success'
+                    status: 'OK'
                 });
             }
             next({
-                error: 'token not found',
+                error: 'Token Not Found',
                 status: 400,
                 message: 'Error'
             });
@@ -122,7 +147,7 @@ class TraineeController {
         }
         catch (err) {
             return next({
-                error: 'bad request',
+                error: 'Bad Request',
                 message: err,
                 status: 400
             });
@@ -136,7 +161,7 @@ class TraineeController {
         }
         catch (err) {
             return next({
-                error: 'bad request',
+                error: 'Bad Request',
                 message: err,
                 status: 400
             });

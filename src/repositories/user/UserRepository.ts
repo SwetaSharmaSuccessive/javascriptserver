@@ -13,7 +13,8 @@ export default class UserRepository extends VersionableRepository<IUserModel, mo
         super(userModel);
     }
     public static findOne(query): mongoose.DocumentQuery<IUserModel, IUserModel, {}> {
-        return userModel.findOne(query).lean();
+        const finalQuery = { deletedAt: undefined, ...query };
+        return userModel.findOne(finalQuery).lean();
     }
 
     public create(data: any): Promise<IUserModel> {
