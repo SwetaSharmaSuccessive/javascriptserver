@@ -18,7 +18,7 @@ export default (module, permissionType) =>  async (req, res, next) => {
     try {
          const user = jwt.verify(token, secretKey);
          console.log('user', user);
-        dbUser =  await UserRepository.findOne({email: user.email});
+        dbUser  =  await UserRepository.findOne({email: user.email});
         if (!dbUser) {
             return next({
                 error: 'Unauthorized',
