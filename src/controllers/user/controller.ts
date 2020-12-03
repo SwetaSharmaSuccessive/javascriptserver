@@ -44,7 +44,7 @@ class UserController {
                         message: 'trainee fetched successfully',
                         totalCount: count.length,
                         count: extracted.length,
-                        data: extractedData,
+                        data: extracted,
                         status: 'success',
                     });
             }
@@ -62,7 +62,7 @@ class UserController {
                     message: 'Trainee fetched successfully',
                     TotalCount: count.length,
                     CountUser: countUser,
-                    data: extractedData,
+                    data: extracted,
                     status: 'success',
                 });
             }

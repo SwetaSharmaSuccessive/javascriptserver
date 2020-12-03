@@ -44,7 +44,7 @@ class TraineeController {
                         message: 'trainee fetched successfully',
                         TotalCount: totalCount,
                         CountUser: countUser,
-                        data: extractedData,
+                        data: extracted,
                         status: 'success',
                     });
                 }
@@ -62,7 +62,7 @@ class TraineeController {
                 message: 'Trainee Fetched Successfully',
                 TotalCount: totalCount,
                 CountUser: countUser,
-                data: extractedData,
+                data: extracted,
                 status: 'success',
             });
         }
