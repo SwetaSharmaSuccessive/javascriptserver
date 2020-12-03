@@ -5,7 +5,7 @@ import { payload } from '../../libs/routes/constant';
 import UserRepository from '../../repositories/user/UserRepository';
 import * as bcrypt from 'bcrypt';
 import IRequest from '../../libs/routes/IRequest';
-import IType from '../IType';
+import IUser from '../../entity/IUser';
 
 
 class UserController {
@@ -30,7 +30,7 @@ class UserController {
             const {skip, limit, sort } = req.query;
             if (req.query.search !== undefined) {
                 const regex = new RegExp(escapeRegExp(req.query.search), 'gi');
-                const extractedData: IType[] = await this.userRepository.get({email: regex} || {name: regex}, {},
+                const extractedData: IUser[] = await this.userRepository.get({email: regex} || {name: regex}, {},
                     {
                         limit : Number(limit),
                         skip : Number(skip),
@@ -47,7 +47,7 @@ class UserController {
                     });
             }
             else {
-                const extractedData: IType[] = await this.userRepository.get(req.body, {}, {
+                const extractedData: IUser[] = await this.userRepository.get(req.body, {}, {
                     limit : Number(limit),
                     skip : Number(skip),
                     sort: {[String(sort)]: req.query.sortedBy},
@@ -74,7 +74,7 @@ class UserController {
             const salt = bcrypt.genSaltSync(saltRounds);
             const hashedPassword = bcrypt.hashSync(rawPassword, salt);
             req.body.password = hashedPassword;
-            const result = await this.userRepository.create(req.body);
+            const result: IUser = await this.userRepository.create(req.body);
             res.status(200).send({
                 message: 'User created successfully',
                 data: result,
@@ -86,14 +86,14 @@ class UserController {
     }
     public update = async(req: Request, res: Response, next: NextFunction) => {
         try {
-            const data = req.body;
-            if ('password' in data) {
-                const rawPassword = data.password;
+            const resultData = req.body;
+            if ('password' in resultData) {
+                const rawPassword = resultData.password;
                 const salt = bcrypt.genSaltSync(10);
                 const hashedPassword = bcrypt.hashSync(rawPassword, salt);
-                data.password = hashedPassword;
+                resultData.password = hashedPassword;
             }
-            const result = await this.userRepository.update(req.body);
+            const result: IUser = await this.userRepository.update(req.body);
             res.status(200).send({
                 message: 'User updated successfully',
                 data: result
@@ -104,7 +104,7 @@ class UserController {
     }
     public delete = async(req: Request, res: Response, next: NextFunction) => {
         try {
-            const result =   await this.userRepository.delete(req.params.id);
+            const result: IUser =   await this.userRepository.delete(req.params.id);
             res.status(200).send({
                 message: 'User deleted successfully',
                 data:
@@ -123,7 +123,7 @@ class UserController {
             const { email, password} = req.body;
             payload.password = password;
             payload.email = email;
-            const result = await UserRepository.findOne({ email});
+            const result: IUser = await UserRepository.findOne({ email});
             if (!result) {
                 next({
                     message: 'Email not Registered!',

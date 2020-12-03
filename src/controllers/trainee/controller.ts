@@ -5,7 +5,7 @@ import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
 import TraineeRepository from '../../repositories/trainee/TraineeRepository';
 import IRequest from '../../libs/routes/IRequest';
-import IType from '../IType';
+import ITrainee from '../../entity/ITrainee';
 
 class TraineeController {
     private traineeRepository: TraineeRepository;
@@ -30,7 +30,7 @@ class TraineeController {
             const {skip, limit, sort } = req.query;
             if (req.query.search !== undefined) {
                 const regex = new RegExp(escapeRegExp(req.query.search), 'gi');
-                const extractedData: IType[] = await this.traineeRepository.get({email: regex} || {name: regex}, {},
+                const extractedData: ITrainee[] = await this.traineeRepository.get({email: regex} || {name: regex}, {},
                     {
                         limit : Number(limit),
                         skip : Number(skip),
@@ -48,7 +48,7 @@ class TraineeController {
                     });
                 }
                 else {
-            const extractedData: IType[] = await this.traineeRepository.get(req.body, {}, {
+            const extractedData: ITrainee[] = await this.traineeRepository.get(req.body, {}, {
                 limit : Number(limit),
                 skip : Number(skip),
                 sort: {[String(sort)]:  req.query.sortedBy},
@@ -76,7 +76,7 @@ class TraineeController {
             const salt = bcrypt.genSaltSync(saltRounds);
             const hashedPassword = bcrypt.hashSync(rawPassword, salt);
             req.body.password = hashedPassword;
-            const result = await this.traineeRepository.create(req.body);
+            const result: ITrainee = await this.traineeRepository.create(req.body);
             res.status(200).send({
                 message: 'Trainee Created Successfully',
                 data: result,
@@ -88,12 +88,12 @@ class TraineeController {
     }
     public update = async(req: Request, res: Response, next: NextFunction) => {
         try {
-            const data = req.body;
-            if ('password' in data) {
-                const rawPassword = data.password;
+            const resultData = req.body;
+            if ('password' in resultData) {
+                const rawPassword = resultData.password;
                 const salt = bcrypt.genSaltSync(10);
                 const hashedPassword = bcrypt.hashSync(rawPassword, salt);
-                data.password = hashedPassword;
+                resultData.password = hashedPassword;
             }
             const result = await this.traineeRepository.update(req.body);
             res.status(200).send({
@@ -106,7 +106,7 @@ class TraineeController {
     }
     public delete = async(req: Request, res: Response, next: NextFunction) => {
         try {
-            const result =   await this.traineeRepository.delete(req.params.id);
+            const result: ITrainee =   await this.traineeRepository.delete(req.params.id);
             res.status(200).send({
                 message: 'Trainee Deleted Successfully',
                 data: {},
@@ -122,7 +122,7 @@ class TraineeController {
             const { email, password} = req.body;
             payload.password = password;
             payload.email = email;
-            const result = await TraineeRepository.findOne({ email});
+            const result: ITrainee = await TraineeRepository.findOne({ email});
             if (!result) {
                 next({
                     message: 'Email not Registered!',
