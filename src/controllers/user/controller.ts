@@ -8,6 +8,7 @@ import IRequest from '../../libs/routes/IRequest';
 import IUser from '../../entity/IUser';
 
 
+
 class UserController {
     static instance: UserController;
     static getInstance() {
@@ -30,34 +31,36 @@ class UserController {
             const {skip, limit, sort } = req.query;
             if (req.query.search !== undefined) {
                 const regex = new RegExp(escapeRegExp(req.query.search), 'gi');
-                const extractedData: IUser[] = await this.userRepository.get({email: regex} || {name: regex}, {},
+                const extractedData: Promise<IUser[]> =  this.userRepository.get({email: regex} || {name: regex}, {},
                     {
                         limit : Number(limit),
                         skip : Number(skip),
                         sort: {[String(sort)]: req.query.sortedBy},
                         collation: ({locale: 'en'})
                     });
-                    const totalCount = await this.userRepository.get({}, {}, {});
+                    const totalCount: Promise<IUser[]> =  this.userRepository.get({}, {}, {});
+                    const [count, extracted] = await Promise.all([totalCount, extractedData]);
                     res.status(200).send({
                         message: 'trainee fetched successfully',
-                        totalCount: totalCount.length,
-                        count: extractedData.length,
+                        totalCount: count.length,
+                        count: extracted.length,
                         data: extractedData,
                         status: 'success',
                     });
             }
             else {
-                const extractedData: IUser[] = await this.userRepository.get(req.body, {}, {
+                const extractedData: Promise<IUser[]> =  this.userRepository.get(req.body, {}, {
                     limit : Number(limit),
                     skip : Number(skip),
                     sort: {[String(sort)]: req.query.sortedBy},
                     collation: ({locale: 'en'})
                 });
-                const totalCount = await this.userRepository.get({}, {}, {});
-                const  countUser = extractedData.length;
+                const totalCount: Promise<IUser[]> =  this.userRepository.get({}, {}, {});
+                const [count, extracted] = await Promise.all([totalCount, extractedData]);
+                const  countUser = extracted.length;
                 res.status(200).send({
                     message: 'Trainee fetched successfully',
-                    TotalCount: totalCount.length,
+                    TotalCount: count.length,
                     CountUser: countUser,
                     data: extractedData,
                     status: 'success',

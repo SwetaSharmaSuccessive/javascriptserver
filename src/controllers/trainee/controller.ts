@@ -30,15 +30,16 @@ class TraineeController {
             const {skip, limit, sort } = req.query;
             if (req.query.search !== undefined) {
                 const regex = new RegExp(escapeRegExp(req.query.search), 'gi');
-                const extractedData: ITrainee[] = await this.traineeRepository.get({email: regex} || {name: regex}, {},
+                const extractedData: Promise <ITrainee[]> = this.traineeRepository.get({email: regex} || {name: regex}, {},
                     {
                         limit : Number(limit),
                         skip : Number(skip),
                         sort: {[String(sort)]:  req.query.sortedBy},
                         collation: ({locale: 'en'})
                     });
-                    const totalCount = await this.traineeRepository.count(req.body);
-                    const countUser = extractedData.length;
+                    const totalCount: number = await this.traineeRepository.count(req.body);
+                    const [ extracted] = await Promise.all([extractedData]);
+                    const countUser = extracted.length;
                     res.status(200).send({
                         message: 'trainee fetched successfully',
                         TotalCount: totalCount,
@@ -48,14 +49,15 @@ class TraineeController {
                     });
                 }
                 else {
-            const extractedData: ITrainee[] = await this.traineeRepository.get(req.body, {}, {
+            const extractedData: Promise <ITrainee[]> = this.traineeRepository.get(req.body, {}, {
                 limit : Number(limit),
                 skip : Number(skip),
                 sort: {[String(sort)]:  req.query.sortedBy},
                 collation: ({locale: 'en'})
             });
-            const totalCount = await this.traineeRepository.count(req.body);
-            const countUser = extractedData.length;
+            const totalCount: number = await this.traineeRepository.count(req.body);
+            const [extracted] = await Promise.all([ extractedData]);
+            const countUser = extracted.length;
             res.status(200).send({
                 message: 'Trainee Fetched Successfully',
                 TotalCount: totalCount,
