@@ -10,6 +10,7 @@
     "allowJs": true /* Allow javascript files to be compiled. */,
     "checkJs": false /* Report errors in .js files. */,
     "sourceMap": true,
+    "skipLibCheck": true,
     "outDir": "./dist",
     "baseUrl": ".",
     "paths": {

@@ -31,7 +31,7 @@ export default class UserRepository extends VersionableRepository<IUserModel, mo
         return super.get(query, projection, options);
 
     }
-    public count() {
+    public countData() {
         return userModel.countDocuments();
     }
 

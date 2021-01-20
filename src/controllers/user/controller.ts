@@ -142,7 +142,7 @@ class UserController {
                     data: {
                         generated_token: token
                     },
-                    status: 'OK'
+                    status: 200
                 });
             }
             next({

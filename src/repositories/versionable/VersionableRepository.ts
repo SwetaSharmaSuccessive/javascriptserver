@@ -21,9 +21,9 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
         });
         return await model.save();
     }
-    public count(query: any): Query<number> {
+    public async count(query: any): Promise<number> {
         const finalQuery = { deletedAt: undefined, ...query };
-        return this.model.count(finalQuery);
+        return await this.model.count(finalQuery);
     }
     public async findOne(query: any): Promise<D> {
         console.log(this.model);
@@ -45,16 +45,17 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
         return await this.model.updateOne(query, data);
     }
     public async delete(id: string): Promise<D> {
+        console.log('versio deleteId....', id);
         const previous = await this.findOne({ originalId: id, deletedAt: undefined });
         if (previous) {
             return await this.invalidate(id);
         }
     }
     public async update(data: any): Promise<D> {
-        const previous = await this.findOne({ originalId: data.originalId, deletedAt: undefined });
+        const previous = await this.findOne({ originalId: data.id, deletedAt: undefined });
         console.log('previous: ', previous);
         if (previous) {
-            await this.invalidateUpdate(data.originalId);
+            await this.invalidate(data.id);
         } else {
             return undefined;
         }
